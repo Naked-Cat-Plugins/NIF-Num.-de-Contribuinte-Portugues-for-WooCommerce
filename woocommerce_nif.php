@@ -8,7 +8,7 @@
  * Author URI: https://ptwooplugins.com
  * Text Domain: nif-num-de-contribuinte-portugues-for-woocommerce
  * Domain Path: /lang
- * Requires at least: 5.0
+ * Requires at least: 5.5
  * Tested up to: 6.5
  * Requires PHP: 7.0
  * WC requires at least: 5.0
@@ -38,10 +38,18 @@ add_action(
 			add_action( 'plugins_loaded', 'woocommerce_nif_init' );
 
 			/**
-			 * Enqueue Javascript
+			 * Enqueue Javascript - Only on the legacy checkout
 			 */
 			function woocommerce_nif_billing_fields_enqueue_scripts() {
-				if ( function_exists( 'is_checkout' ) && is_checkout() && apply_filters( 'woocommerce_nif_use_javascript', true ) ) { // Default - USE Javascript (4.0)
+				if (
+					function_exists( 'is_checkout' )
+					&&
+					is_checkout()
+					&&
+					( ! has_block( 'woocommerce/checkout' ) ) // Not on the Blocks checkout
+					&&
+					apply_filters( 'woocommerce_nif_use_javascript', true ) // Default - USE Javascript (since 4.0)
+				) {
 					if ( ! function_exists( 'get_plugin_data' ) ) {
 						require_once ABSPATH . 'wp-admin/includes/plugin.php';
 					}
