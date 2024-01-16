@@ -38,11 +38,7 @@ const Block = ({ className, children, checkoutExtensionData }) => {
 		};
 	});
 
-	return (
-		<div className={className}>
-			Lorem ipsum
-		</div>
-	);
+	return <div className={className}>Lorem ipsum</div>;
 };
 
 export default Block;
