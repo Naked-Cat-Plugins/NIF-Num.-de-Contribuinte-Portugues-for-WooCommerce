@@ -374,13 +374,18 @@ add_action(
 	}
 );
 
-/* Checkout Block Not (yet) Compatible */
+/* Checkout Block Compatible */
 add_action(
-	'before_woocommerce_init',
+	'woocommerce_blocks_loaded',
 	function() {
-		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, false );
-		}
+		require_once __DIR__ . '/nif-blocks-integration.php';
+
+		add_action(
+			'woocommerce_blocks_checkout_block_registration',
+			function( $integration_registry ) {
+				$integration_registry->register( new NIF_Blocks_Integration() );
+			}
+		);
 	}
 );
 
