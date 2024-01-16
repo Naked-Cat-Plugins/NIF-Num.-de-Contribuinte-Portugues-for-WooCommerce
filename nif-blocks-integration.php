@@ -56,8 +56,8 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return void
 	 */
 	public function register_block_editor_scripts() {
-		$script_url        = NIF_BLOCK_PLUGIN_URL . 'build/nif-block.js';
-		$script_asset_path = NIF_BLOCK_PLUGIN_DIR . 'build/nif-block.asset.php';
+		$script_url        = WC_NIF_PLUGIN_URL . 'build/nif-block.js';
+		$script_asset_path = WC_NIF_PLUGIN_DIR . 'build/nif-block.asset.php';
 		$script_asset      = file_exists( $script_asset_path )
 			? require $script_asset_path
 			: array(
@@ -76,7 +76,7 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 		wp_set_script_translations(
 			'nif-block-editor',
 			'nif',
-			NIF_BLOCK_PLUGIN_DIR . 'lang'
+			WC_NIF_PLUGIN_DIR . 'lang'
 		);
 	}
 
@@ -86,8 +86,8 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return void
 	 */
 	public function register_block_frontend_scripts() {
-		$script_url        = NIF_BLOCK_PLUGIN_URL . 'build/nif-block-frontend.js';
-		$script_asset_path = NIF_BLOCK_PLUGIN_DIR . 'build/nif-block-frontend.asset.php';
+		$script_url        = WC_NIF_PLUGIN_URL . 'build/nif-block-frontend.js';
+		$script_asset_path = WC_NIF_PLUGIN_DIR . 'build/nif-block-frontend.asset.php';
 		$script_asset      = file_exists( $script_asset_path )
 			? require $script_asset_path
 			: array(
@@ -106,7 +106,7 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 		wp_set_script_translations(
 			'nif-block-frontend',
 			'nif',
-			NIF_BLOCK_PLUGIN_DIR . 'lang'
+			WC_NIF_PLUGIN_DIR . 'lang'
 		);
 	}
 
@@ -121,6 +121,6 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 			return filemtime( $file );
 		}
 
-		return NIF_BLOCK_PLUGIN_VERSION;
+		return WC_NIF_VERSION;
 	}
 }

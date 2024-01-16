@@ -22,6 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Define constants.
+define( 'WC_NIF_VERSION', '5.6' );
+define( 'WC_NIF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WC_NIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 add_action(
 	'plugins_loaded',
