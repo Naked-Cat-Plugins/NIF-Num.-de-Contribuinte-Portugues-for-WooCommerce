@@ -47,7 +47,14 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return array
 	 */
 	public function get_script_data() {
-		return array();
+
+		$data = array(
+			'defaultLabel'      => woocommerce_nif_field_label(),
+			'defaultIsRequired' => woocommerce_nif_field_required(),
+			'defaultValidate'   => woocommerce_nif_field_validate(),
+		);
+
+		return $data;
 	}
 
 	/**

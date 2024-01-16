@@ -64,7 +64,7 @@ add_action(
 						'woocommerce_nif',
 						array(
 							'show_all_countries' => apply_filters( 'woocommerce_nif_show_all_countries', false ) ? 1 : 0,
-							'validate'           => apply_filters( 'woocommerce_nif_field_validate', false ) ? 1 : 0,
+							'validate'           => woocommerce_nif_field_validate() ? 1 : 0,
 						)
 					);
 				}
@@ -79,13 +79,13 @@ add_action(
 			function woocommerce_nif_billing_fields( $fields, $country ) {
 				$fields['billing_nif'] = array(
 					'type'         => 'text',
-					'label'        => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+					'label'        => woocommerce_nif_field_label(),
 					'placeholder'  => apply_filters( 'woocommerce_nif_field_placeholder', __( 'Portuguese VAT identification number', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
 					'class'        => apply_filters( 'woocommerce_nif_field_class', array( 'form-row-first' ) ), // Should be an option (?)
 					'required'     => (
 											( $country === 'PT' ) || ( apply_filters( 'woocommerce_nif_show_all_countries', false ) )
 											?
-											apply_filters( 'woocommerce_nif_field_required', false ) // Should be an option (?)
+											woocommerce_nif_field_required() // Should be an option (?)
 											:
 											false
 										),
@@ -97,7 +97,7 @@ add_action(
 											$country === 'PT'
 											?
 											(
-												apply_filters( 'woocommerce_nif_field_validate', false )
+												woocommerce_nif_field_validate()
 												?
 												array( 'nif_pt' ) // Does nothing, actually - Validation is down there on the 'woocommerce_checkout_process' action
 												:
@@ -131,7 +131,7 @@ add_action(
 					// Customer is portuguese or it's a new order ?
 					if ( $billing_country === 'PT' || ( $billing_country === '' && $countries->get_base_country() === 'PT' ) || apply_filters( 'woocommerce_nif_show_all_countries', false ) ) {
 						$billing_fields['nif'] = array(
-							'label' => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+							'label' => woocommerce_nif_field_label(),
 						);
 					}
 				}
@@ -169,7 +169,7 @@ add_action(
 			function woocommerce_nif_customer_meta_fields( $show_fields ) {
 				if ( isset( $show_fields['billing'] ) && is_array( $show_fields['billing']['fields'] ) ) {
 					$show_fields['billing']['fields']['billing_nif'] = array(
-						'label'       => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+						'label'       => woocommerce_nif_field_label(),
 						'description' => apply_filters( 'woocommerce_nif_field_placeholder', __( 'Portuguese VAT identification number', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
 					);
 				}
@@ -189,7 +189,7 @@ add_action(
 					?>
 					<p id="woocommerce_nif_info">
 						<span id="woocommerce_nif_info_label">
-							<?php echo esc_html( apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ) ); ?>:
+							<?php echo esc_html( woocommerce_nif_field_label() ); ?>:
 						</span>
 						<span id="woocommerce_nif_info_value">
 							<?php echo esc_html( $billing_nif ); ?>
@@ -211,7 +211,7 @@ add_action(
 				$billing_nif = $order->get_meta( '_billing_nif' );
 				if ( $billing_nif ) {
 					$fields['billing_nif'] = array(
-						'label' => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+						'label' => woocommerce_nif_field_label(),
 						'value' => wptexturize( $billing_nif ),
 					);
 				}
@@ -255,7 +255,7 @@ add_action(
 			 * Validation - Checkout
 			 */
 			function woocommerce_nif_checkout_process() {
-				if ( apply_filters( 'woocommerce_nif_field_validate', false ) ) {
+				if ( woocommerce_nif_field_validate() ) {
 					$customer_country = WC()->customer->get_billing_country();
 					$countries        = new WC_Countries();
 					// If the field is NOT required and it's empty, we shouldn't validate it
@@ -266,12 +266,12 @@ add_action(
 							(
 								woocommerce_valida_nif( $billing_nif, true )
 								||
-								( trim( $billing_nif ) === '' && ! apply_filters( 'woocommerce_nif_field_required', false ) )
+								( trim( $billing_nif ) === '' && ! woocommerce_nif_field_required() )
 							)
 						) {
 							wc_add_notice(
 								/* translators: %s NIF field name */
-								sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ) . '</strong>' ),
+								sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . woocommerce_nif_field_label() . '</strong>' ),
 								'error',
 								array(
 									'id' => 'billing_nif',
@@ -296,7 +296,7 @@ add_action(
 			 */
 			function woocommerce_nif_after_save_address_validation( $user_id, $load_address, $address ) {
 				if ( $load_address === 'billing' ) {
-					if ( apply_filters( 'woocommerce_nif_field_validate', false ) ) {
+					if ( woocommerce_nif_field_validate() ) {
 						$country = wc_clean( isset( $_POST['billing_country'] ) ? $_POST['billing_country'] : '' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, (because wc_clean takes care of it)
 						if ( $country === 'PT' ) {
 							$billing_nif = wc_clean( isset( $_POST['billing_nif'] ) ? $_POST['billing_nif'] : '' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, (because wc_clean takes care of it)
@@ -306,12 +306,12 @@ add_action(
 								(
 									woocommerce_valida_nif( $billing_nif, true )
 									||
-									( trim( $billing_nif ) === '' && ! apply_filters( 'woocommerce_nif_field_required', false ) )
+									( trim( $billing_nif ) === '' && ! woocommerce_nif_field_required() )
 								)
 							) {
 								wc_add_notice(
 									/* translators: %s NIF field name */
-									sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ) . '</strong>' ),
+									sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . woocommerce_nif_field_label() . '</strong>' ),
 									'error'
 								);
 							}
@@ -362,6 +362,33 @@ add_action(
 						return false;
 					}
 				}
+			}
+
+			/**
+			 * Return the field label.
+			 *
+			 * @return string
+			 */
+			function woocommerce_nif_field_label() {
+				return apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) );
+			}
+
+			/**
+			 * Return if the field is required.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_field_required() {
+				return apply_filters( 'woocommerce_nif_field_required', false );
+			}
+
+			/**
+			 * Return if the field is to validate.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_field_validate() {
+				return apply_filters( 'woocommerce_nif_field_validate', false );
 			}
 		}
 	},
