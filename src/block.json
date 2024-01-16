@@ -19,6 +19,18 @@
 				"remove": true,
 				"move": false
 			}
+		},
+		"label": {
+			"type": "string",
+			"default": "NIF / NIPC"
+		},
+		"isRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"validate": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"textdomain": "nif-num-de-contribuinte-portugues-for-woocommerce",
