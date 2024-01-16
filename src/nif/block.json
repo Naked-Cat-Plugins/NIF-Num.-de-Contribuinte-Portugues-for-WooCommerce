@@ -1,8 +1,8 @@
 {
 	"apiVersion": 2,
-	"name": "woocommerce/nif",
+	"name": "woocommerce/ptwoo-nif",
 	"version": "0.1.0",
-	"title": "NIF",
+	"title": "NIF Português",
 	"category": "woocommerce",
 	"description": "",
 	"supports": {
@@ -34,5 +34,5 @@
 		}
 	},
 	"textdomain": "nif-num-de-contribuinte-portugues-for-woocommerce",
-	"editorStyle": "file:../../../build/style-nif-block.css"
+	"editorStyle": "file:../../../build/style-ptwoo-nif-block.css"
 }

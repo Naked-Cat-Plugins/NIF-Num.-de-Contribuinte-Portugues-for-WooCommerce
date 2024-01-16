@@ -23,9 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants.
-define( 'WC_NIF_VERSION', '5.6' );
-define( 'WC_NIF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'WC_NIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'PTWOO_NIF_VERSION', '5.6' );
+define( 'PTWOO_NIF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'PTWOO_NIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 add_action(
 	'plugins_loaded',
@@ -409,12 +409,12 @@ add_action(
 add_action(
 	'woocommerce_blocks_loaded',
 	function() {
-		require_once __DIR__ . '/nif-blocks-integration.php';
+		require_once __DIR__ . '/ptwoo-nif-blocks-integration.php';
 
 		add_action(
 			'woocommerce_blocks_checkout_block_registration',
 			function( $integration_registry ) {
-				$integration_registry->register( new NIF_Blocks_Integration() );
+				$integration_registry->register( new PTWoo_NIF_Blocks_Integration() );
 			}
 		);
 	}

@@ -40,22 +40,7 @@ const Block = ({ className, children, checkoutExtensionData }) => {
 
 	return (
 		<div className={className}>
-			<CheckboxControl
-				id="nif-checkbox"
-				checked={checked}
-				onChange={setChecked}
-			>
-				{children?.[0] || optInDefaultText}
-			</CheckboxControl>
-
-			{validationError?.hidden === false && (
-				<div>
-					<span role="img" aria-label={__('Warning emoji', 'nif')}>
-						⚠️
-					</span>
-					{validationError?.message}
-				</div>
-			)}
+			Lorem ipsum
 		</div>
 	);
 };

@@ -4,7 +4,7 @@ use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 /**
  * Class for integrating with WooCommerce Blocks
  */
-class NIF_Blocks_Integration implements IntegrationInterface {
+class PTWoo_NIF_Blocks_Integration implements IntegrationInterface {
 
 	/**
 	 * The name of the integration.
@@ -29,7 +29,7 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return string[]
 	 */
 	public function get_script_handles() {
-		return array( 'nif-block-frontend' );
+		return array( 'ptwoo-nif-block-frontend' );
 	}
 
 	/**
@@ -38,7 +38,7 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return string[]
 	 */
 	public function get_editor_script_handles() {
-		return array( 'nif-block-editor' );
+		return array( 'ptwoo-nif-block-editor' );
 	}
 
 	/**
@@ -63,8 +63,8 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return void
 	 */
 	public function register_block_editor_scripts() {
-		$script_url        = WC_NIF_PLUGIN_URL . 'build/nif-block.js';
-		$script_asset_path = WC_NIF_PLUGIN_DIR . 'build/nif-block.asset.php';
+		$script_url        = PTWOO_NIF_PLUGIN_URL . 'build/ptwoo-nif-block.js';
+		$script_asset_path = PTWOO_NIF_PLUGIN_DIR . 'build/ptwoo-nif-block.asset.php';
 		$script_asset      = file_exists( $script_asset_path )
 			? require $script_asset_path
 			: array(
@@ -73,7 +73,7 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 			);
 
 		wp_register_script(
-			'nif-block-editor',
+			'ptwoo-nif-block-editor',
 			$script_url,
 			$script_asset['dependencies'],
 			$script_asset['version'],
@@ -81,9 +81,9 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 		);
 
 		wp_set_script_translations(
-			'nif-block-editor',
+			'ptwoo-nif-block-editor',
 			'nif',
-			WC_NIF_PLUGIN_DIR . 'lang'
+			PTWOO_NIF_PLUGIN_DIR . 'lang'
 		);
 	}
 
@@ -93,8 +93,8 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return void
 	 */
 	public function register_block_frontend_scripts() {
-		$script_url        = WC_NIF_PLUGIN_URL . 'build/nif-block-frontend.js';
-		$script_asset_path = WC_NIF_PLUGIN_DIR . 'build/nif-block-frontend.asset.php';
+		$script_url        = PTWOO_NIF_PLUGIN_URL . 'build/ptwoo-nif-block-frontend.js';
+		$script_asset_path = PTWOO_NIF_PLUGIN_DIR . 'build/ptwoo-nif-block-frontend.asset.php';
 		$script_asset      = file_exists( $script_asset_path )
 			? require $script_asset_path
 			: array(
@@ -103,7 +103,7 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 			);
 
 		wp_register_script(
-			'nif-block-frontend',
+			'ptwoo-nif-block-frontend',
 			$script_url,
 			$script_asset['dependencies'],
 			$script_asset['version'],
@@ -111,9 +111,9 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 		);
 
 		wp_set_script_translations(
-			'nif-block-frontend',
+			'ptwoo-nif-block-frontend',
 			'nif',
-			WC_NIF_PLUGIN_DIR . 'lang'
+			PTWOO_NIF_PLUGIN_DIR . 'lang'
 		);
 	}
 
@@ -128,6 +128,6 @@ class NIF_Blocks_Integration implements IntegrationInterface {
 			return filemtime( $file );
 		}
 
-		return WC_NIF_VERSION;
+		return PTWOO_NIF_VERSION;
 	}
 }
