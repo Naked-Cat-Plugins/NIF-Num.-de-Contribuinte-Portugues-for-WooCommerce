@@ -1,13 +1,8 @@
 /**
  * External dependencies
  */
-import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
-import {
-	PlainText,
-	InspectorControls,
-	useBlockProps,
-} from '@wordpress/block-editor';
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl, TextControl } from '@wordpress/components';
 import { getSetting } from '@woocommerce/settings';
 import { TextInput } from '@woocommerce/blocks-checkout';
@@ -16,7 +11,7 @@ import { TextInput } from '@woocommerce/blocks-checkout';
  * Internal dependencies
  */
 import './style.scss';
-import FormStepHeading from './form-step-heading';
+import FormStep from './form-step';
 
 const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
 	'nif_data',
@@ -24,21 +19,8 @@ const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
 );
 
 export default function Edit({ attributes, setAttributes, className }) {
-	const {
-		stepTitle = '',
-		stepDescription = '',
-		showStepNumber = true,
-		label,
-		isRequired,
-		validate,
-	} = attributes;
-
-	const blockProps = useBlockProps({
-		className: classnames('wc-block-components-checkout-step', className, {
-			'wc-block-components-checkout-step--with-step-number':
-				showStepNumber,
-		}),
-	});
+	const { showStepNumber, label, isRequired, validate } = attributes;
+	const blockProps = useBlockProps();
 
 	return (
 		<>
@@ -98,39 +80,8 @@ export default function Edit({ attributes, setAttributes, className }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<FormStepHeading>
-					<PlainText
-						value={stepTitle}
-						onChange={(value) =>
-							setAttributes({ stepTitle: value })
-						}
-						style={{ backgroundColor: 'transparent' }}
-					/>
-				</FormStepHeading>
-
-				<div className="wc-block-components-checkout-step__container">
-					<p className="wc-block-components-checkout-step__description">
-						<PlainText
-							className={
-								!stepDescription
-									? 'wc-block-components-checkout-step__description-placeholder'
-									: ''
-							}
-							value={stepDescription}
-							placeholder={__(
-								'Optional text for this form step.',
-								'nif-num-de-contribuinte-portugues-for-woocommerce'
-							)}
-							onChange={(value) =>
-								setAttributes({
-									stepDescription: value,
-								})
-							}
-							style={{ backgroundColor: 'transparent' }}
-						/>
-					</p>
+				<FormStep setAttributes={setAttributes} attributes={attributes}>
 					<div
-						className="wc-block-components-checkout-step__content"
 						aria-disabled="true"
 						style={{
 							userSelect: 'none',
@@ -144,7 +95,7 @@ export default function Edit({ attributes, setAttributes, className }) {
 							value=""
 						/>
 					</div>
-				</div>
+				</FormStep>
 			</div>
 		</>
 	);
