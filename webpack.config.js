@@ -11,8 +11,8 @@ const defaultRules = defaultConfig.module.rules.filter((rule) => {
 module.exports = {
 	...defaultConfig,
 	entry: {
-		'ptwoo-nif-block': path.resolve(process.cwd(), 'src', 'nif', 'index.js'),
-		'ptwoo-nif-block-frontend': path.resolve(process.cwd(), 'src', 'nif', 'frontend.js'),
+		'ptwoo-nif-block': path.resolve(process.cwd(), 'src', 'index.js'),
+		'ptwoo-nif-block-frontend': path.resolve(process.cwd(), 'src', 'frontend.js'),
 	},
 	module: {
 		...defaultConfig.module,
