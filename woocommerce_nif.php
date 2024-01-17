@@ -410,6 +410,7 @@ add_action(
 	'woocommerce_blocks_loaded',
 	function() {
 		require_once __DIR__ . '/ptwoo-nif-blocks-integration.php';
+		require_once __DIR__ . '/ptwoo-nif-extend-store-endpoint.php';
 
 		add_action(
 			'woocommerce_blocks_checkout_block_registration',
@@ -417,6 +418,8 @@ add_action(
 				$integration_registry->register( new PTWoo_NIF_Blocks_Integration() );
 			}
 		);
+
+		( new PTWoo_NIF_Extend_Store_Endpoint() )->initialize();
 	}
 );
 
