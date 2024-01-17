@@ -13,6 +13,11 @@ import { withFilteredAttributes } from './utils';
 import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
+const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
+	'ptwoo_nif_data',
+	''
+);
+
 const Block = (props) => {
 	const {
 		stepTitle,
@@ -49,10 +54,10 @@ const Block = (props) => {
 					<input
 						type="text"
 						id="billing_nif"
-						aria-label={label}
+						aria-label={label || defaultLabel}
 						maxLength="9"
 						autoComplete="on"
-						required={isRequired}
+						required={isRequired || defaultIsRequired}
 						onFocus={() => setIsActive(true)}
 						onBlur={() => setIsActive(false)}
 						aria-invalid={hasError === true}

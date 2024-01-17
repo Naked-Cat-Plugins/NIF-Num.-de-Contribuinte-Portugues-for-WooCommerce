@@ -14,7 +14,7 @@ import './style.scss';
 import FormStep from './edit/form-step';
 
 const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
-	'nif_data',
+	'ptwoo_nif_data',
 	''
 );
 

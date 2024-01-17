@@ -4,16 +4,16 @@
 import { __ } from '@wordpress/i18n';
 
 export default {
-	className: {
-		type: 'string',
-		default: '',
-	},
 	lock: {
 		type: 'object',
 		default: {
 			move: true,
 			remove: false,
 		},
+	},
+	className: {
+		type: 'string',
+		default: '',
 	},
 	stepTitle: {
 		type: 'string',

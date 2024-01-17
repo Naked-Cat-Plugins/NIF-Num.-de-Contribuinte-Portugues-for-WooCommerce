@@ -12,7 +12,7 @@ class PTWoo_NIF_Blocks_Integration implements IntegrationInterface {
 	 * @return string
 	 */
 	public function get_name() {
-		return 'nif';
+		return 'ptwoo_nif';
 	}
 
 	/**
