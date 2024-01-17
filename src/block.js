@@ -1,44 +1,76 @@
 /**
  * External dependencies
  */
+import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
-import { CheckboxControl } from '@woocommerce/blocks-checkout';
+import { useState } from '@wordpress/element';
 import { getSetting } from '@woocommerce/settings';
-import { useSelect, useDispatch } from '@wordpress/data';
 
-const { optInDefaultText } = getSetting('nif_data', '');
+/**
+ * Internal dependencies
+ */
+import { withFilteredAttributes } from './utils';
+import attributes from './attributes';
+import FormStep from './frontend/form-step';
 
-const Block = ({ className, children, checkoutExtensionData }) => {
-	const [checked, setChecked] = useState(false);
-	const { setExtensionData } = checkoutExtensionData;
+const Block = (props) => {
+	const {
+		stepTitle,
+		stepDescription,
+		showStepNumber,
+		label,
+		isRequired,
+		validate,
+		className,
+	} = props;
+	console.log(props);
 
-	const { setValidationErrors, clearValidationError } = useDispatch(
-		'wc/store/validation'
+	const [isActive, setIsActive] = useState(false);
+	const hasError = false;
+
+	return (
+		<div className={className}>
+			<FormStep
+				title={stepTitle}
+				description={stepDescription}
+				showStepNumber={showStepNumber}
+			>
+				<div
+					className={classnames(
+						'wc-block-components-text-input',
+						{
+							'is-active': isActive,
+						},
+						{
+							'has-error': hasError,
+						}
+					)}
+				>
+					<input
+						type="text"
+						id="billing_nif"
+						aria-label={label}
+						maxLength="9"
+						autoComplete="on"
+						required={isRequired}
+						onFocus={() => setIsActive(true)}
+						onBlur={() => setIsActive(false)}
+						aria-invalid={hasError === true}
+						value=""
+					/>
+					<label htmlFor="billing_nif">
+						{label}
+						{isRequired === true
+							? null
+							: ` ${__(
+									'(optional)',
+									'nif-num-de-contribuinte-portugues-for-woocommerce'
+								)}`}
+					</label>
+				</div>
+			</FormStep>
+		</div>
 	);
-
-	useEffect(() => {
-		setExtensionData('nif', 'optin', checked);
-		if (!checked) {
-			setValidationErrors({
-				nif: {
-					message: __('Please tick the box', 'nif'),
-					hidden: false,
-				},
-			});
-			return;
-		}
-		clearValidationError('nif');
-	}, [clearValidationError, setValidationErrors, checked, setExtensionData]);
-
-	const { validationError } = useSelect((select) => {
-		const store = select('wc/store/validation');
-		return {
-			validationError: store.getValidationError('nif'),
-		};
-	});
-
-	return <div className={className}>Lorem ipsum</div>;
 };
 
-export default Block;
+export default withFilteredAttributes(attributes)(Block);
