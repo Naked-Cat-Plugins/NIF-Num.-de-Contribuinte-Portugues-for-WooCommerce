@@ -11,14 +11,14 @@ import { TextInput } from '@woocommerce/blocks-checkout';
  * Internal dependencies
  */
 import './style.scss';
-import FormStep from './form-step';
+import FormStep from './edit/form-step';
 
 const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
 	'nif_data',
 	''
 );
 
-export default function Edit({ attributes, setAttributes, className }) {
+export default function Edit({ attributes, setAttributes }) {
 	const { showStepNumber, label, isRequired, validate } = attributes;
 	const blockProps = useBlockProps();
 
