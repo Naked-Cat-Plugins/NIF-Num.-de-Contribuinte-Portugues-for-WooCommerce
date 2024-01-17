@@ -3,7 +3,8 @@
  */
 import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
+import { extensionCartUpdate } from '@woocommerce/blocks-checkout';
 import { getSetting } from '@woocommerce/settings';
 import { useSelect } from '@wordpress/data';
 
@@ -15,6 +16,7 @@ import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
 const CART_STORE_KEY = 'wc/store/cart';
+
 const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
 	'ptwoo_nif_data',
 	''
@@ -39,14 +41,27 @@ const Block = (props) => {
 		};
 	});
 
-	console.log(props);
-
 	const [isActive, setIsActive] = useState(false);
-	const [nif, setNif] = useState(
-		extensions['ptwoo_nif']?.nif
+	const [billingNif, setBillingNif] = useState(
+		extensions['ptwoo-nif']?.billingNif
 	);
 
+	const doValidation = validate || defaultValidate;
 	const hasError = false;
+
+	const onChange = (event) => {
+		const { value: nextValue } = event.target;
+		setBillingNif(nextValue);
+	};
+
+	useEffect(() => {
+		extensionCartUpdate({
+			namespace: 'ptwoo-nif',
+			data: {
+				billingNif,
+			},
+		});
+	}, [extensionCartUpdate, billingNif]);
 
 	return (
 		<div className={className}>
@@ -59,7 +74,7 @@ const Block = (props) => {
 					className={classnames(
 						'wc-block-components-text-input',
 						{
-							'is-active': isActive || nif,
+							'is-active': isActive || billingNif,
 						},
 						{
 							'has-error': hasError,
@@ -73,10 +88,11 @@ const Block = (props) => {
 						maxLength="9"
 						autoComplete="on"
 						required={isRequired || defaultIsRequired}
+						onChange={onChange}
 						onFocus={() => setIsActive(true)}
 						onBlur={() => setIsActive(false)}
 						aria-invalid={hasError === true}
-						value={nif || ''}
+						value={billingNif || ''}
 					/>
 					<label htmlFor="billing_nif">
 						{label || defaultLabel}
