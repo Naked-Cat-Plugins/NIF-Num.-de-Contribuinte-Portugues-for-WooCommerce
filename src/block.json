@@ -12,39 +12,7 @@
 		"reusable": false
 	},
 	"parent": ["woocommerce/checkout-fields-block"],
-	"attributes": {
-		"lock": {
-			"type": "object",
-			"default": {
-				"remove": true,
-				"move": false
-			}
-		},
-		"stepTitle": {
-			"type": "string",
-			"default": "Fiscal information"
-		},
-		"stepDescription": {
-			"type": "string",
-			"default": ""
-		},
-		"showStepNumber": {
-			"type": "boolean",
-			"default": true
-		},
-		"label": {
-			"type": "string",
-			"default": "NIF / NIPC"
-		},
-		"isRequired": {
-			"type": "boolean",
-			"default": false
-		},
-		"validate": {
-			"type": "boolean",
-			"default": false
-		}
-	},
+	"attributes": {},
 	"textdomain": "nif-num-de-contribuinte-portugues-for-woocommerce",
 	"editorStyle": "file:../../../build/style-ptwoo-nif-block.css"
 }
