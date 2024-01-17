@@ -64,7 +64,7 @@ const Block = (props) => {
 						value=""
 					/>
 					<label htmlFor="billing_nif">
-						{label}
+						{label || defaultLabel}
 						{isRequired === true
 							? null
 							: ` ${__(
