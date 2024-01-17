@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { getSetting } from '@woocommerce/settings';
+import { useSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -13,6 +14,7 @@ import { withFilteredAttributes } from './utils';
 import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
+const CART_STORE_KEY = 'wc/store/cart';
 const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
 	'ptwoo_nif_data',
 	''
@@ -28,9 +30,22 @@ const Block = (props) => {
 		validate,
 		className,
 	} = props;
+
+	const { extensions } = useSelect((select) => {
+		const store = select(CART_STORE_KEY);
+		const cartData = store.getCartData();
+		return {
+			extensions: cartData.extensions,
+		};
+	});
+
 	console.log(props);
 
 	const [isActive, setIsActive] = useState(false);
+	const [nif, setNif] = useState(
+		extensions['ptwoo_nif']?.nif
+	);
+
 	const hasError = false;
 
 	return (
@@ -44,7 +59,7 @@ const Block = (props) => {
 					className={classnames(
 						'wc-block-components-text-input',
 						{
-							'is-active': isActive,
+							'is-active': isActive || nif,
 						},
 						{
 							'has-error': hasError,
@@ -61,7 +76,7 @@ const Block = (props) => {
 						onFocus={() => setIsActive(true)}
 						onBlur={() => setIsActive(false)}
 						aria-invalid={hasError === true}
-						value=""
+						value={nif || ''}
 					/>
 					<label htmlFor="billing_nif">
 						{label || defaultLabel}
