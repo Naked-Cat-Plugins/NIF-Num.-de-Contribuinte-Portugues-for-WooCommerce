@@ -25,7 +25,11 @@ const Block = (props) => {
 		isRequired,
 		validate,
 		className,
-		validation: { setValidationErrors, getValidationError },
+		validation: {
+			setValidationErrors,
+			getValidationError,
+			clearValidationError,
+		},
 	} = props;
 
 	const { extensions } = useSelect((select) => {
@@ -41,20 +45,15 @@ const Block = (props) => {
 		extensions['ptwoo-nif']?.billingNif
 	);
 
-	// Send data to the Store API.
-	useEffect(() => {
-		extensionCartUpdate({
-			namespace: 'ptwoo-nif',
-			data: {
-				billingNif,
-			},
-		});
-	}, [extensionCartUpdate, billingNif]);
+	const error = getValidationError('billing-nif-required');
+	const hasError = error?.hidden === false && error?.message !== '';
 
 	useEffect(() => {
-		if (isRequired && billingNif.length <= 0) {
+		if (billingNif) {
+			clearValidationError('billing-nif-required');
+		} else {
 			setValidationErrors({
-				['billingNif']: {
+				['billing-nif-required']: {
 					message: sprintf(
 						__(
 							/* translators: %s field label */
@@ -67,10 +66,25 @@ const Block = (props) => {
 				},
 			});
 		}
-	}, [isRequired, billingNif, setValidationErrors]);
+		return () => {
+			clearValidationError('billing-nif-required');
+		};
+	}, [billingNif, clearValidationError, setValidationErrors]);
 
-	const error = getValidationError('billingNif');
-	const hasError = error?.hidden === false && error?.message !== '';
+	const onChange = (event) => {
+		const { value: nextValue } = event.target;
+		setBillingNif(nextValue);
+	};
+
+	// Send data to the Store API.
+	useEffect(() => {
+		extensionCartUpdate({
+			namespace: 'ptwoo-nif',
+			data: {
+				billingNif,
+			},
+		});
+	}, [extensionCartUpdate, billingNif]);
 
 	return (
 		<div className={className}>
@@ -97,10 +111,7 @@ const Block = (props) => {
 						maxLength="9"
 						autoComplete="on"
 						required={isRequired}
-						onChange={(event) => {
-							const { value: nextValue } = event.target;
-							setBillingNif(nextValue);
-						}}
+						onChange={onChange}
 						onFocus={() => setIsFocus(true)}
 						onBlur={() => setIsFocus(false)}
 						aria-invalid={hasError === true}
