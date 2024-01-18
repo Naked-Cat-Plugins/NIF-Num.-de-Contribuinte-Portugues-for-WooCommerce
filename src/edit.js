@@ -4,7 +4,6 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl, TextControl } from '@wordpress/components';
-import { getSetting } from '@woocommerce/settings';
 import { TextInput } from '@woocommerce/blocks-checkout';
 
 /**
@@ -12,11 +11,6 @@ import { TextInput } from '@woocommerce/blocks-checkout';
  */
 import './style.scss';
 import FormStep from './edit/form-step';
-
-const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
-	'ptwoo_nif_data',
-	''
-);
 
 export default function Edit({ attributes, setAttributes }) {
 	const { showStepNumber, label, isRequired, validate } = attributes;
@@ -55,7 +49,7 @@ export default function Edit({ attributes, setAttributes }) {
 							'Label',
 							'nif-num-de-contribuinte-portugues-for-woocommerce'
 						)}
-						value={label || defaultLabel}
+						value={label}
 						onChange={(value) => setAttributes({ label: value })}
 					/>
 					<ToggleControl
@@ -63,7 +57,7 @@ export default function Edit({ attributes, setAttributes }) {
 							'Required',
 							'nif-num-de-contribuinte-portugues-for-woocommerce'
 						)}
-						checked={isRequired || defaultIsRequired}
+						checked={isRequired}
 						onChange={(value) =>
 							setAttributes({ isRequired: value })
 						}
@@ -73,7 +67,7 @@ export default function Edit({ attributes, setAttributes }) {
 							'Validate',
 							'nif-num-de-contribuinte-portugues-for-woocommerce'
 						)}
-						checked={validate || defaultValidate}
+						checked={validate}
 						onChange={(value) => setAttributes({ validate: value })}
 					/>
 				</PanelBody>

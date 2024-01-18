@@ -2,13 +2,19 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
+import { getSetting } from '@woocommerce/settings';
+
+const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
+	'ptwoo_nif_data',
+	''
+);
 
 export default {
 	lock: {
 		type: 'object',
 		default: {
-			move: true,
-			remove: false,
+			move: false,
+			remove: true,
 		},
 	},
 	className: {
@@ -32,17 +38,14 @@ export default {
 	},
 	label: {
 		type: 'string',
-		default: __(
-			'NIF / NIPC',
-			'nif-num-de-contribuinte-portugues-for-woocommerce'
-		),
+		default: defaultLabel,
 	},
 	isRequired: {
 		type: 'boolean',
-		default: false,
+		default: defaultIsRequired,
 	},
 	validate: {
 		type: 'boolean',
-		default: false,
+		default: defaultValidate,
 	},
 };

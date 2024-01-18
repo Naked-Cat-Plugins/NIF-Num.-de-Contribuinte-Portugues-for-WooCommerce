@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import { extensionCartUpdate } from '@woocommerce/blocks-checkout';
-import { getSetting } from '@woocommerce/settings';
 import { useSelect } from '@wordpress/data';
 
 /**
@@ -16,11 +15,6 @@ import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
 const CART_STORE_KEY = 'wc/store/cart';
-
-const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
-	'ptwoo_nif_data',
-	''
-);
 
 const Block = (props) => {
 	const {
@@ -46,7 +40,6 @@ const Block = (props) => {
 		extensions['ptwoo-nif']?.billingNif
 	);
 
-	const doValidation = validate || defaultValidate;
 	const hasError = false;
 
 	const onChange = (event) => {
@@ -84,10 +77,10 @@ const Block = (props) => {
 					<input
 						type="text"
 						id="billing_nif"
-						aria-label={label || defaultLabel}
+						aria-label={label}
 						maxLength="9"
 						autoComplete="on"
-						required={isRequired || defaultIsRequired}
+						required={isRequired}
 						onChange={onChange}
 						onFocus={() => setIsActive(true)}
 						onBlur={() => setIsActive(false)}
@@ -95,7 +88,7 @@ const Block = (props) => {
 						value={billingNif || ''}
 					/>
 					<label htmlFor="billing_nif">
-						{label || defaultLabel}
+						{label}
 						{isRequired === true
 							? null
 							: ` ${__(
