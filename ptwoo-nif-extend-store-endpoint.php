@@ -62,7 +62,8 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	 * @return array
 	 */
 	public function store_api_data_callback() {
-		$billing_nif = wc()->session->get( 'billing_nif' );
+		$billing_nif  = wc()->session->get( 'billing_nif' );
+		$validate_nif = wc()->session->get( 'validate_nif' );
 
 		if ( empty( $billing_nif ) ) {
 			$customer = wc()->customer;
@@ -76,9 +77,18 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 			}
 		}
 
-		return array(
+		$data = array(
 			'billingNif' => $billing_nif,
+			'isValid'    => true,
 		);
+
+		if ( ! empty( $validate_nif ) && ! empty( $billing_nif ) ) {
+			$is_valid = woocommerce_valida_nif( $billing_nif, true );
+
+			$data['isValid'] = $is_valid;
+		}
+
+		return $data;
 	}
 
 	/**
@@ -89,13 +99,18 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	 */
 	public function store_api_update_callback( $data ) {
 
-		$billing_nif = '';
+		$billing_nif = null;
 		if ( ! empty( $data['billingNif'] ) ) {
 			$billing_nif = sanitize_text_field( $data['billingNif'] );
 		}
 
-		// Store NIF in session.
+		$validate_nif = false;
+		if ( isset( $data['validate'] ) ) {
+			$validate_nif = boolval( $data['validate'] );
+		}
+
 		wc()->session->set( 'billing_nif', $billing_nif );
+		wc()->session->set( 'validate_nif', $validate_nif );
 	}
 
 	/**

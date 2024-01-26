@@ -15,6 +15,7 @@ import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
 const CART_STORE_KEY = 'wc/store/cart';
+const INVALID_ERROR_ID = 'billing-nif-invalid';
 
 const Block = (props) => {
 	const {
@@ -45,15 +46,16 @@ const Block = (props) => {
 		extensions['ptwoo-nif']?.billingNif
 	);
 
-	const error = getValidationError('billing-nif-required');
-	const hasError = error?.hidden === false && error?.message !== '';
+	const invalidError = getValidationError(INVALID_ERROR_ID);
+	const hasError = invalidError?.hidden === false && invalidError?.message;
+	const errorMessage = invalidError?.message;
 
 	useEffect(() => {
-		if (billingNif) {
-			clearValidationError('billing-nif-required');
+		if (extensions['ptwoo-nif']?.isValid) {
+			clearValidationError(INVALID_ERROR_ID);
 		} else {
 			setValidationErrors({
-				['billing-nif-required']: {
+				[INVALID_ERROR_ID]: {
 					message: sprintf(
 						__(
 							/* translators: %s field label */
@@ -62,19 +64,14 @@ const Block = (props) => {
 						),
 						label
 					),
-					hidden: true,
+					hidden: false,
 				},
 			});
 		}
 		return () => {
-			clearValidationError('billing-nif-required');
+			clearValidationError(INVALID_ERROR_ID);
 		};
-	}, [billingNif, clearValidationError, setValidationErrors]);
-
-	const onChange = (event) => {
-		const { value: nextValue } = event.target;
-		setBillingNif(nextValue);
-	};
+	}, [extensions['ptwoo-nif'], billingNif]);
 
 	// Send data to the Store API.
 	useEffect(() => {
@@ -82,9 +79,35 @@ const Block = (props) => {
 			namespace: 'ptwoo-nif',
 			data: {
 				billingNif,
+				validate,
 			},
 		});
-	}, [extensionCartUpdate, billingNif]);
+	}, [extensionCartUpdate, billingNif, validate]);
+
+	// Callback for the input's onChange event.
+	const onChange = (event) => {
+		const { value: nextValue } = event.target;
+
+		clearValidationError(INVALID_ERROR_ID);
+
+		if (nextValue.length === 0 && isRequired) {
+			setValidationErrors({
+				[INVALID_ERROR_ID]: {
+					message: sprintf(
+						__(
+							/* translators: %s field label */
+							'Please enter a valid %s',
+							'nif-num-de-contribuinte-portugues-for-woocommerce'
+						),
+						label
+					),
+					hidden: false,
+				},
+			});
+		}
+
+		setBillingNif(nextValue);
+	};
 
 	return (
 		<div className={className}>
@@ -134,7 +157,7 @@ const Block = (props) => {
 							className="wc-block-components-validation-error"
 							role="alert"
 						>
-							<p>{error.message}</p>
+							<p>{errorMessage}</p>
 						</div>
 					)}
 				</div>
