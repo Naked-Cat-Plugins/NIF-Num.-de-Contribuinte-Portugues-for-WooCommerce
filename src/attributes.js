@@ -4,10 +4,8 @@
 import { __ } from '@wordpress/i18n';
 import { getSetting } from '@woocommerce/settings';
 
-const { defaultLabel, defaultIsRequired, defaultValidate } = getSetting(
-	'ptwoo_nif_data',
-	''
-);
+const { defaultLabel, defaultIsRequired, defaultValidate, defaultMaxLength } =
+	getSetting('ptwoo_nif_data', '');
 
 export default {
 	lock: {
@@ -47,5 +45,9 @@ export default {
 	validate: {
 		type: 'boolean',
 		default: defaultValidate,
+	},
+	maxLength: {
+		type: 'integer',
+		default: defaultMaxLength,
 	},
 };

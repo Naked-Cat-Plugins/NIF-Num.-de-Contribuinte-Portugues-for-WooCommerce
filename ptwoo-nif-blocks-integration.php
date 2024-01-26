@@ -52,6 +52,7 @@ class PTWoo_NIF_Blocks_Integration implements IntegrationInterface {
 			'defaultLabel'      => woocommerce_nif_field_label(),
 			'defaultIsRequired' => woocommerce_nif_field_required(),
 			'defaultValidate'   => woocommerce_nif_field_validate(),
+			'defaultMaxLength'  => woocommerce_nif_field_maxlength(),
 		);
 
 		return $data;

@@ -25,6 +25,7 @@ const Block = (props) => {
 		label,
 		isRequired,
 		validate,
+		maxLength,
 		className,
 		validation: {
 			setValidationErrors,
@@ -131,7 +132,7 @@ const Block = (props) => {
 						type="text"
 						id="billing_nif"
 						aria-label={label}
-						maxLength="9"
+						maxLength={maxLength}
 						autoComplete="on"
 						required={isRequired}
 						onChange={onChange}

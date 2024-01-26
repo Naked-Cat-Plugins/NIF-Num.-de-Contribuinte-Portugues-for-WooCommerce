@@ -92,7 +92,7 @@ add_action(
 					'clear'        => apply_filters( 'woocommerce_nif_field_clear', true ), // Should be an option (?)
 					'autocomplete' => apply_filters( 'woocommerce_nif_field_autocomplete', 'on' ),
 					'priority'     => apply_filters( 'woocommerce_nif_field_priority', 120 ), // WooCommerce should order by this parameter but it doesn't seem to be doing so
-					'maxlength'    => apply_filters( 'woocommerce_nif_field_maxlength', 9 ),
+					'maxlength'    => woocommerce_nif_field_maxlength(),
 					'validate'     => (
 											$country === 'PT'
 											?
@@ -389,6 +389,15 @@ add_action(
 			 */
 			function woocommerce_nif_field_validate() {
 				return apply_filters( 'woocommerce_nif_field_validate', false );
+			}
+
+			/**
+			 * Return if the field is to validate.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_field_maxlength() {
+				return apply_filters( 'woocommerce_nif_field_maxlength', 9 );
 			}
 		}
 	},
