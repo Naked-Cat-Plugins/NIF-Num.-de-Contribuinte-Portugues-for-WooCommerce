@@ -62,6 +62,7 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	 * @return array
 	 */
 	public function store_api_data_callback() {
+		$customer     = wc()->session->get( 'customer' );
 		$billing_nif  = wc()->session->get( 'billing_nif' );
 		$validate_nif = wc()->session->get( 'validate_nif' );
 
@@ -82,7 +83,20 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 			'isValid'    => true,
 		);
 
-		if ( ! empty( $validate_nif ) && ! empty( $billing_nif ) ) {
+		$show_all_countries = woocommerce_nif_show_all_countries();
+		$should_validate    =
+			! empty( $validate_nif ) // Validate is true.
+			&& ! empty( $billing_nif ) // NIF is not empty.
+			&& (
+				! empty( $show_all_countries ) // Show to all countries.
+				|| (
+					empty( $show_all_countries ) // Only show for PT and country is PT.
+					&& ! empty( $customer['country'] )
+					&& 'PT' === $customer['country']
+				)
+			);
+
+		if ( ! empty( $should_validate ) ) {
 			$is_valid = woocommerce_valida_nif( $billing_nif, true );
 
 			$data['isValid'] = $is_valid;

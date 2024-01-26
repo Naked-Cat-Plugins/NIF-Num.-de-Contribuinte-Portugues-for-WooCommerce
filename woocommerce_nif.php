@@ -63,7 +63,7 @@ add_action(
 						'woocommerce-nif',
 						'woocommerce_nif',
 						array(
-							'show_all_countries' => apply_filters( 'woocommerce_nif_show_all_countries', false ) ? 1 : 0,
+							'show_all_countries' => woocommerce_nif_show_all_countries() ? 1 : 0,
 							'validate'           => woocommerce_nif_field_validate() ? 1 : 0,
 						)
 					);
@@ -83,7 +83,7 @@ add_action(
 					'placeholder'  => apply_filters( 'woocommerce_nif_field_placeholder', __( 'Portuguese VAT identification number', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
 					'class'        => apply_filters( 'woocommerce_nif_field_class', array( 'form-row-first' ) ), // Should be an option (?)
 					'required'     => (
-											( $country === 'PT' ) || ( apply_filters( 'woocommerce_nif_show_all_countries', false ) )
+											( $country === 'PT' ) || ( woocommerce_nif_show_all_countries() )
 											?
 											woocommerce_nif_field_required() // Should be an option (?)
 											:
@@ -129,7 +129,7 @@ add_action(
 					$countries       = new WC_Countries();
 					$billing_country = $order->get_billing_country();
 					// Customer is portuguese or it's a new order ?
-					if ( $billing_country === 'PT' || ( $billing_country === '' && $countries->get_base_country() === 'PT' ) || apply_filters( 'woocommerce_nif_show_all_countries', false ) ) {
+					if ( $billing_country === 'PT' || ( $billing_country === '' && $countries->get_base_country() === 'PT' ) || woocommerce_nif_show_all_countries() ) {
 						$billing_fields['nif'] = array(
 							'label' => woocommerce_nif_field_label(),
 						);
@@ -155,7 +155,7 @@ add_action(
 			 * @param integer $user_id The user ID.
 			 */
 			function woocommerce_nif_ajax_get_customer_details( $customer_data, $customer, $user_id ) {
-				if ( ( isset( $customer_data['billing']['country'] ) && $customer_data['billing']['country'] === 'PT' ) || apply_filters( 'woocommerce_nif_show_all_countries', false ) ) {
+				if ( ( isset( $customer_data['billing']['country'] ) && $customer_data['billing']['country'] === 'PT' ) || woocommerce_nif_show_all_countries() ) {
 					$customer_data['billing']['nif'] = $customer->get_meta( 'billing_nif' );
 				}
 				return $customer_data;
@@ -185,7 +185,7 @@ add_action(
 			function woocommerce_nif_order_details_after_customer_details( $order ) {
 				$billing_country = $order->get_billing_country();
 				$billing_nif     = $order->get_meta( '_billing_nif' );
-				if ( ( $billing_country === 'PT' || apply_filters( 'woocommerce_nif_show_all_countries', false ) ) && $billing_nif ) {
+				if ( ( $billing_country === 'PT' || woocommerce_nif_show_all_countries() ) && $billing_nif ) {
 					?>
 					<p id="woocommerce_nif_info">
 						<span id="woocommerce_nif_info_label">
@@ -392,12 +392,21 @@ add_action(
 			}
 
 			/**
-			 * Return if the field is to validate.
+			 * Return the field maxlength.
 			 *
 			 * @return bool
 			 */
 			function woocommerce_nif_field_maxlength() {
 				return apply_filters( 'woocommerce_nif_field_maxlength', 9 );
+			}
+
+			/**
+			 * Return whether the field should be displayed only for PT or all countries.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_show_all_countries() {
+				return apply_filters( 'woocommerce_nif_show_all_countries', false );
 			}
 		}
 	},

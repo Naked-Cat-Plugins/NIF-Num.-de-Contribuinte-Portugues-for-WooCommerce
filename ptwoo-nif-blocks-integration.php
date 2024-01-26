@@ -49,10 +49,11 @@ class PTWoo_NIF_Blocks_Integration implements IntegrationInterface {
 	public function get_script_data() {
 
 		$data = array(
-			'defaultLabel'      => woocommerce_nif_field_label(),
-			'defaultIsRequired' => woocommerce_nif_field_required(),
-			'defaultValidate'   => woocommerce_nif_field_validate(),
-			'defaultMaxLength'  => woocommerce_nif_field_maxlength(),
+			'defaultLabel'            => woocommerce_nif_field_label(),
+			'defaultIsRequired'       => woocommerce_nif_field_required(),
+			'defaultValidate'         => woocommerce_nif_field_validate(),
+			'defaultMaxLength'        => woocommerce_nif_field_maxlength(),
+			'defaultShowAllCountries' => woocommerce_nif_show_all_countries(),
 		);
 
 		return $data;

@@ -26,6 +26,7 @@ const Block = (props) => {
 		isRequired,
 		validate,
 		maxLength,
+		showAllCountries,
 		className,
 		validation: {
 			setValidationErrors,
@@ -34,11 +35,13 @@ const Block = (props) => {
 		},
 	} = props;
 
-	const { extensions } = useSelect((select) => {
+	const { extensions, billingCountry } = useSelect((select) => {
 		const store = select(CART_STORE_KEY);
-		const cartData = store.getCartData();
+		const { extensions, billingAddress } = store.getCartData();
+		const { country: billingCountry } = billingAddress;
 		return {
-			extensions: cartData.extensions,
+			billingCountry,
+			extensions,
 		};
 	});
 
@@ -46,6 +49,9 @@ const Block = (props) => {
 	const [billingNif, setBillingNif] = useState(
 		extensions['ptwoo-nif']?.billingNif
 	);
+
+	const displayBillingNif =
+		showAllCountries || (!showAllCountries && 'PT' === billingCountry);
 
 	const invalidError = getValidationError(INVALID_ERROR_ID);
 	const hasError = invalidError?.hidden === false && invalidError?.message;
@@ -112,57 +118,59 @@ const Block = (props) => {
 
 	return (
 		<div className={className}>
-			<FormStep
-				title={stepTitle}
-				description={stepDescription}
-				showStepNumber={showStepNumber}
-			>
-				<div
-					className={classnames(
-						'wc-block-components-text-input',
-						{
-							'is-active': isFocus || billingNif,
-						},
-						{
-							'has-error': hasError,
-						}
-					)}
+			{displayBillingNif && (
+				<FormStep
+					title={stepTitle}
+					description={stepDescription}
+					showStepNumber={showStepNumber}
 				>
-					<input
-						type="text"
-						id="billing_nif"
-						aria-label={label}
-						maxLength={maxLength}
-						autoComplete="on"
-						required={isRequired}
-						onChange={onChange}
-						onFocus={() => setIsFocus(true)}
-						onBlur={() => setIsFocus(false)}
-						aria-invalid={hasError === true}
-						value={billingNif || ''}
-					/>
-					<label htmlFor="billing_nif">
-						{sprintf(
-							'%s%s',
-							label,
-							isRequired === true
-								? ''
-								: ` ${__(
-										'(optional)',
-										'nif-num-de-contribuinte-portugues-for-woocommerce'
-									)}`
+					<div
+						className={classnames(
+							'wc-block-components-text-input',
+							{
+								'is-active': isFocus || billingNif,
+							},
+							{
+								'has-error': hasError,
+							}
 						)}
-					</label>
-					{hasError && (
-						<div
-							className="wc-block-components-validation-error"
-							role="alert"
-						>
-							<p>{errorMessage}</p>
-						</div>
-					)}
-				</div>
-			</FormStep>
+					>
+						<input
+							type="text"
+							id="billing_nif"
+							aria-label={label}
+							maxLength={maxLength}
+							autoComplete="on"
+							required={isRequired}
+							onChange={onChange}
+							onFocus={() => setIsFocus(true)}
+							onBlur={() => setIsFocus(false)}
+							aria-invalid={hasError === true}
+							value={billingNif || ''}
+						/>
+						<label htmlFor="billing_nif">
+							{sprintf(
+								'%s%s',
+								label,
+								isRequired === true
+									? ''
+									: ` ${__(
+											'(optional)',
+											'nif-num-de-contribuinte-portugues-for-woocommerce'
+										)}`
+							)}
+						</label>
+						{hasError && (
+							<div
+								className="wc-block-components-validation-error"
+								role="alert"
+							>
+								<p>{errorMessage}</p>
+							</div>
+						)}
+					</div>
+				</FormStep>
+			)}
 		</div>
 	);
 };
