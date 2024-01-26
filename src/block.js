@@ -50,6 +50,9 @@ const Block = (props) => {
 		extensions['ptwoo-nif']?.billingNif
 	);
 
+	console.log('-- Extension Data: ', extensions['ptwoo-nif']);
+	console.log('-- Billing Country: ', billingCountry);
+
 	const displayBillingNif =
 		showAllCountries || (!showAllCountries && 'PT' === billingCountry);
 
