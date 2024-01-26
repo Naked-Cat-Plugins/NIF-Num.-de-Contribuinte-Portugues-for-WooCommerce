@@ -22,6 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Define constants.
+define( 'PTWOO_NIF_VERSION', '5.6' );
+define( 'PTWOO_NIF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'PTWOO_NIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 add_action(
 	'plugins_loaded',
@@ -59,8 +63,8 @@ add_action(
 						'woocommerce-nif',
 						'woocommerce_nif',
 						array(
-							'show_all_countries' => apply_filters( 'woocommerce_nif_show_all_countries', false ) ? 1 : 0,
-							'validate'           => apply_filters( 'woocommerce_nif_field_validate', false ) ? 1 : 0,
+							'show_all_countries' => woocommerce_nif_show_all_countries() ? 1 : 0,
+							'validate'           => woocommerce_nif_field_validate() ? 1 : 0,
 						)
 					);
 				}
@@ -75,25 +79,25 @@ add_action(
 			function woocommerce_nif_billing_fields( $fields, $country ) {
 				$fields['billing_nif'] = array(
 					'type'         => 'text',
-					'label'        => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+					'label'        => woocommerce_nif_field_label(),
 					'placeholder'  => apply_filters( 'woocommerce_nif_field_placeholder', __( 'Portuguese VAT identification number', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
 					'class'        => apply_filters( 'woocommerce_nif_field_class', array( 'form-row-first' ) ), // Should be an option (?)
 					'required'     => (
-											( $country === 'PT' ) || ( apply_filters( 'woocommerce_nif_show_all_countries', false ) )
+											( $country === 'PT' ) || ( woocommerce_nif_show_all_countries() )
 											?
-											apply_filters( 'woocommerce_nif_field_required', false ) // Should be an option (?)
+											woocommerce_nif_field_required() // Should be an option (?)
 											:
 											false
 										),
 					'clear'        => apply_filters( 'woocommerce_nif_field_clear', true ), // Should be an option (?)
 					'autocomplete' => apply_filters( 'woocommerce_nif_field_autocomplete', 'on' ),
 					'priority'     => apply_filters( 'woocommerce_nif_field_priority', 120 ), // WooCommerce should order by this parameter but it doesn't seem to be doing so
-					'maxlength'    => apply_filters( 'woocommerce_nif_field_maxlength', 9 ),
+					'maxlength'    => woocommerce_nif_field_maxlength(),
 					'validate'     => (
 											$country === 'PT'
 											?
 											(
-												apply_filters( 'woocommerce_nif_field_validate', false )
+												woocommerce_nif_field_validate()
 												?
 												array( 'nif_pt' ) // Does nothing, actually - Validation is down there on the 'woocommerce_checkout_process' action
 												:
@@ -125,9 +129,9 @@ add_action(
 					$countries       = new WC_Countries();
 					$billing_country = $order->get_billing_country();
 					// Customer is portuguese or it's a new order ?
-					if ( $billing_country === 'PT' || ( $billing_country === '' && $countries->get_base_country() === 'PT' ) || apply_filters( 'woocommerce_nif_show_all_countries', false ) ) {
+					if ( $billing_country === 'PT' || ( $billing_country === '' && $countries->get_base_country() === 'PT' ) || woocommerce_nif_show_all_countries() ) {
 						$billing_fields['nif'] = array(
-							'label' => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+							'label' => woocommerce_nif_field_label(),
 						);
 					}
 				}
@@ -151,7 +155,7 @@ add_action(
 			 * @param integer $user_id The user ID.
 			 */
 			function woocommerce_nif_ajax_get_customer_details( $customer_data, $customer, $user_id ) {
-				if ( ( isset( $customer_data['billing']['country'] ) && $customer_data['billing']['country'] === 'PT' ) || apply_filters( 'woocommerce_nif_show_all_countries', false ) ) {
+				if ( ( isset( $customer_data['billing']['country'] ) && $customer_data['billing']['country'] === 'PT' ) || woocommerce_nif_show_all_countries() ) {
 					$customer_data['billing']['nif'] = $customer->get_meta( 'billing_nif' );
 				}
 				return $customer_data;
@@ -165,7 +169,7 @@ add_action(
 			function woocommerce_nif_customer_meta_fields( $show_fields ) {
 				if ( isset( $show_fields['billing'] ) && is_array( $show_fields['billing']['fields'] ) ) {
 					$show_fields['billing']['fields']['billing_nif'] = array(
-						'label'       => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+						'label'       => woocommerce_nif_field_label(),
 						'description' => apply_filters( 'woocommerce_nif_field_placeholder', __( 'Portuguese VAT identification number', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
 					);
 				}
@@ -181,11 +185,11 @@ add_action(
 			function woocommerce_nif_order_details_after_customer_details( $order ) {
 				$billing_country = $order->get_billing_country();
 				$billing_nif     = $order->get_meta( '_billing_nif' );
-				if ( ( $billing_country === 'PT' || apply_filters( 'woocommerce_nif_show_all_countries', false ) ) && $billing_nif ) {
+				if ( ( $billing_country === 'PT' || woocommerce_nif_show_all_countries() ) && $billing_nif ) {
 					?>
 					<p id="woocommerce_nif_info">
 						<span id="woocommerce_nif_info_label">
-							<?php echo esc_html( apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ) ); ?>:
+							<?php echo esc_html( woocommerce_nif_field_label() ); ?>:
 						</span>
 						<span id="woocommerce_nif_info_value">
 							<?php echo esc_html( $billing_nif ); ?>
@@ -207,7 +211,7 @@ add_action(
 				$billing_nif = $order->get_meta( '_billing_nif' );
 				if ( $billing_nif ) {
 					$fields['billing_nif'] = array(
-						'label' => apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ),
+						'label' => woocommerce_nif_field_label(),
 						'value' => wptexturize( $billing_nif ),
 					);
 				}
@@ -251,7 +255,7 @@ add_action(
 			 * Validation - Checkout
 			 */
 			function woocommerce_nif_checkout_process() {
-				if ( apply_filters( 'woocommerce_nif_field_validate', false ) ) {
+				if ( woocommerce_nif_field_validate() ) {
 					$customer_country = WC()->customer->get_billing_country();
 					$countries        = new WC_Countries();
 					// If the field is NOT required and it's empty, we shouldn't validate it
@@ -262,12 +266,12 @@ add_action(
 							(
 								woocommerce_valida_nif( $billing_nif, true )
 								||
-								( trim( $billing_nif ) === '' && ! apply_filters( 'woocommerce_nif_field_required', false ) )
+								( trim( $billing_nif ) === '' && ! woocommerce_nif_field_required() )
 							)
 						) {
 							wc_add_notice(
 								/* translators: %s NIF field name */
-								sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ) . '</strong>' ),
+								sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . woocommerce_nif_field_label() . '</strong>' ),
 								'error',
 								array(
 									'id' => 'billing_nif',
@@ -292,7 +296,7 @@ add_action(
 			 */
 			function woocommerce_nif_after_save_address_validation( $user_id, $load_address, $address ) {
 				if ( $load_address === 'billing' ) {
-					if ( apply_filters( 'woocommerce_nif_field_validate', false ) ) {
+					if ( woocommerce_nif_field_validate() ) {
 						$country = wc_clean( isset( $_POST['billing_country'] ) ? $_POST['billing_country'] : '' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, (because wc_clean takes care of it)
 						if ( $country === 'PT' ) {
 							$billing_nif = wc_clean( isset( $_POST['billing_nif'] ) ? $_POST['billing_nif'] : '' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, (because wc_clean takes care of it)
@@ -302,12 +306,12 @@ add_action(
 								(
 									woocommerce_valida_nif( $billing_nif, true )
 									||
-									( trim( $billing_nif ) === '' && ! apply_filters( 'woocommerce_nif_field_required', false ) )
+									( trim( $billing_nif ) === '' && ! woocommerce_nif_field_required() )
 								)
 							) {
 								wc_add_notice(
 									/* translators: %s NIF field name */
-									sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) ) . '</strong>' ),
+									sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . woocommerce_nif_field_label() . '</strong>' ),
 									'error'
 								);
 							}
@@ -359,6 +363,51 @@ add_action(
 					}
 				}
 			}
+
+			/**
+			 * Return the field label.
+			 *
+			 * @return string
+			 */
+			function woocommerce_nif_field_label() {
+				return apply_filters( 'woocommerce_nif_field_label', __( 'NIF / NIPC', 'nif-num-de-contribuinte-portugues-for-woocommerce' ) );
+			}
+
+			/**
+			 * Return if the field is required.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_field_required() {
+				return apply_filters( 'woocommerce_nif_field_required', false );
+			}
+
+			/**
+			 * Return if the field is to validate.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_field_validate() {
+				return apply_filters( 'woocommerce_nif_field_validate', false );
+			}
+
+			/**
+			 * Return the field maxlength.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_field_maxlength() {
+				return apply_filters( 'woocommerce_nif_field_maxlength', 9 );
+			}
+
+			/**
+			 * Return whether the field should be displayed only for PT or all countries.
+			 *
+			 * @return bool
+			 */
+			function woocommerce_nif_show_all_countries() {
+				return apply_filters( 'woocommerce_nif_show_all_countries', false );
+			}
 		}
 	},
 	1
@@ -374,13 +423,21 @@ add_action(
 	}
 );
 
-/* Checkout Block Not (yet) Compatible */
+/* Checkout Block Compatible */
 add_action(
-	'before_woocommerce_init',
+	'woocommerce_blocks_loaded',
 	function() {
-		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, false );
-		}
+		require_once __DIR__ . '/ptwoo-nif-blocks-integration.php';
+		require_once __DIR__ . '/ptwoo-nif-extend-store-endpoint.php';
+
+		add_action(
+			'woocommerce_blocks_checkout_block_registration',
+			function( $integration_registry ) {
+				$integration_registry->register( new PTWoo_NIF_Blocks_Integration() );
+			}
+		);
+
+		( new PTWoo_NIF_Extend_Store_Endpoint() )->initialize();
 	}
 );
 
