@@ -37,6 +37,7 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 		);
 
 		add_action( 'woocommerce_store_api_checkout_update_order_meta', array( $this, 'checkout_update_order_meta' ) );
+		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'maybe_clear_session_key' ) );
 	}
 
 	/**
@@ -179,5 +180,18 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 		}
 
 		return $validate;
+	}
+
+	/**
+	 * Clear the extension's session data, if set.
+	 *
+	 * @return void
+	 */
+	public function maybe_clear_session_key() {
+		$session_data = wc()->session->get( $this->get_name() );
+
+		if ( ! empty( $session_data ) ) {
+			wc()->session->__unset( $this->get_name() );
+		}
 	}
 }
