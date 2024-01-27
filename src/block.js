@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import { extensionCartUpdate } from '@woocommerce/blocks-checkout';
-import { useSelect } from '@wordpress/data';
+import { useSelect, useDispatch } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -14,7 +14,6 @@ import { withFilteredAttributes } from './utils';
 import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
-const CART_STORE_KEY = 'wc/store/cart';
 const INVALID_ERROR_ID = 'billing-nif-invalid';
 
 const Block = (props) => {
@@ -36,7 +35,7 @@ const Block = (props) => {
 	} = props;
 
 	const { extensions, billingCountry } = useSelect((select) => {
-		const store = select(CART_STORE_KEY);
+		const store = select('wc/store/cart');
 		const { extensions, billingAddress } = store.getCartData();
 		const { country: billingCountry } = billingAddress;
 		return {
@@ -44,6 +43,11 @@ const Block = (props) => {
 			extensions,
 		};
 	});
+
+	const {
+		__internalIncrementCalculating: disablePlaceOrderButton,
+		__internalDecrementCalculating: enablePlaceOrderButton,
+	} = useDispatch('wc/store/checkout');
 
 	const [isFocus, setIsFocus] = useState(false);
 	const [billingNif, setBillingNif] = useState(
@@ -85,14 +89,23 @@ const Block = (props) => {
 
 	// Send data to the Store API.
 	useEffect(() => {
+		disablePlaceOrderButton();
 		extensionCartUpdate({
 			namespace: 'ptwoo-nif',
 			data: {
 				billingNif,
 				validate,
 			},
+		}).then(() => {
+			enablePlaceOrderButton();
 		});
-	}, [extensionCartUpdate, billingNif, validate]);
+	}, [
+		extensionCartUpdate,
+		billingNif,
+		validate,
+		disablePlaceOrderButton,
+		enablePlaceOrderButton,
+	]);
 
 	// Callback for the input's onChange event.
 	const onChange = (event) => {
