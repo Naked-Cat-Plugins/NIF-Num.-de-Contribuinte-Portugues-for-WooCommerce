@@ -3,9 +3,10 @@
  */
 import classnames from 'classnames';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
-import { extensionCartUpdate } from '@woocommerce/blocks-checkout';
+import { useEffect, useState, useCallback } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { extensionCartUpdate } from '@woocommerce/blocks-checkout';
+import { CART_STORE_KEY, CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
 
 /**
  * Internal dependencies
@@ -14,6 +15,7 @@ import { withFilteredAttributes } from './utils';
 import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
+const EXTENSION_NAMESPACE = 'ptwoo-nif';
 const INVALID_ERROR_ID = 'billing-nif-invalid';
 
 const Block = (props) => {
@@ -35,7 +37,7 @@ const Block = (props) => {
 	} = props;
 
 	const { extensions, billingCountry } = useSelect((select) => {
-		const store = select('wc/store/cart');
+		const store = select(CART_STORE_KEY);
 		const { extensions, billingAddress } = store.getCartData();
 		const { country: billingCountry } = billingAddress;
 		return {
@@ -47,14 +49,17 @@ const Block = (props) => {
 	const {
 		__internalIncrementCalculating: disablePlaceOrderButton,
 		__internalDecrementCalculating: enablePlaceOrderButton,
-	} = useDispatch('wc/store/checkout');
+	} = useDispatch(CHECKOUT_STORE_KEY);
 
 	const [isFocus, setIsFocus] = useState(false);
 	const [billingNif, setBillingNif] = useState(
-		extensions['ptwoo-nif']?.billingNif
+		extensions[EXTENSION_NAMESPACE]?.billingNif
+	);
+	const [prevBillingNif, setPrevBillingNif] = useState(
+		extensions[EXTENSION_NAMESPACE]?.billingNif
 	);
 
-	console.log('-- Extension Data: ', extensions['ptwoo-nif']);
+	console.log('-- Extension Data: ', extensions[EXTENSION_NAMESPACE]);
 	console.log('-- Billing Country: ', billingCountry);
 
 	const displayBillingNif =
@@ -65,7 +70,7 @@ const Block = (props) => {
 	const errorMessage = invalidError?.message;
 
 	useEffect(() => {
-		if (extensions['ptwoo-nif']?.isValid) {
+		if (extensions[EXTENSION_NAMESPACE]?.isValid) {
 			clearValidationError(INVALID_ERROR_ID);
 		} else {
 			setValidationErrors({
@@ -85,30 +90,36 @@ const Block = (props) => {
 		return () => {
 			clearValidationError(INVALID_ERROR_ID);
 		};
-	}, [extensions['ptwoo-nif'], billingNif]);
+	}, [extensions[EXTENSION_NAMESPACE], billingNif]);
 
 	// Send data to the Store API.
 	useEffect(() => {
-		disablePlaceOrderButton();
-		extensionCartUpdate({
-			namespace: 'ptwoo-nif',
-			data: {
-				billingNif,
-				validate,
-			},
-		}).then(() => {
-			enablePlaceOrderButton();
-		});
+		if (billingNif !== prevBillingNif) {
+			disablePlaceOrderButton();
+			extensionCartUpdate({
+				namespace: EXTENSION_NAMESPACE,
+				data: {
+					billingNif,
+					validate,
+				},
+				cartPropsToReceive: ['extensions'],
+			}).then(() => {
+				enablePlaceOrderButton();
+				setPrevBillingNif(billingNif);
+			});
+		}
 	}, [
 		extensionCartUpdate,
 		billingNif,
 		validate,
 		disablePlaceOrderButton,
 		enablePlaceOrderButton,
+		prevBillingNif,
+		setPrevBillingNif,
 	]);
 
 	// Callback for the input's onChange event.
-	const onChange = (event) => {
+	const onChange = useCallback((event) => {
 		const { value: nextValue } = event.target;
 
 		clearValidationError(INVALID_ERROR_ID);
@@ -130,7 +141,7 @@ const Block = (props) => {
 		}
 
 		setBillingNif(nextValue);
-	};
+	}, []);
 
 	return (
 		<div className={className}>
