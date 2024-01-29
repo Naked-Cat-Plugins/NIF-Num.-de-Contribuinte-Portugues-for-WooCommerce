@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				mutation.addedNodes.length > 0
 			) {
 				const addedNodesArray = Array.from(mutation.addedNodes);
-				let shippingMethodsBlock = addedNodesArray.find(
+				let targetBlock = addedNodesArray.find(
 					(node) =>
 						node.classList &&
 						node.classList.contains(
@@ -37,7 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
 						)
 				);
 
-				if (shippingMethodsBlock) {
+				if (!targetBlock) {
+					targetBlock = addedNodesArray.find(
+						(node) =>
+							node.classList &&
+							node.classList.contains(
+								'wp-block-woocommerce-checkout-payment-block'
+							)
+					);
+				}
+
+				if (targetBlock) {
 					observer.disconnect();
 
 					const nifBlock = document.querySelector(
@@ -45,13 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
 					);
 					if (nifBlock) {
 						const position =
-							shippingMethodsBlock.compareDocumentPosition(
-								nifBlock
-							);
+							targetBlock.compareDocumentPosition(nifBlock);
 						if (position === Node.DOCUMENT_POSITION_FOLLOWING) {
-							shippingMethodsBlock.parentNode.insertBefore(
+							targetBlock.parentNode.insertBefore(
 								nifBlock,
-								shippingMethodsBlock
+								targetBlock
 							);
 						}
 					}
