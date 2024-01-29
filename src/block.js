@@ -5,7 +5,10 @@ import classnames from 'classnames';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useState, useCallback } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { extensionCartUpdate } from '@woocommerce/blocks-checkout';
+import {
+	extensionCartUpdate,
+	ValidatedTextInput,
+} from '@woocommerce/blocks-checkout';
 import { CART_STORE_KEY, CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
 
 /**
@@ -58,9 +61,6 @@ const Block = (props) => {
 	const [prevBillingNif, setPrevBillingNif] = useState(
 		extensions[EXTENSION_NAMESPACE]?.billingNif
 	);
-
-	console.log('-- Extension Data: ', extensions[EXTENSION_NAMESPACE]);
-	console.log('-- Billing Country: ', billingCountry);
 
 	const displayBillingNif =
 		showAllCountries || (!showAllCountries && 'PT' === billingCountry);
@@ -119,29 +119,30 @@ const Block = (props) => {
 	]);
 
 	// Callback for the input's onChange event.
-	const onChange = useCallback((event) => {
-		const { value: nextValue } = event.target;
+	const onChange = useCallback(
+		(nextValue) => {
+			clearValidationError(INVALID_ERROR_ID);
 
-		clearValidationError(INVALID_ERROR_ID);
-
-		if (nextValue.length === 0 && isRequired) {
-			setValidationErrors({
-				[INVALID_ERROR_ID]: {
-					message: sprintf(
-						__(
-							/* translators: %s field label */
-							'Please enter a valid %s',
-							'nif-num-de-contribuinte-portugues-for-woocommerce'
+			if (nextValue.length === 0 && isRequired) {
+				setValidationErrors({
+					[INVALID_ERROR_ID]: {
+						message: sprintf(
+							__(
+								/* translators: %s field label */
+								'Please enter a valid %s',
+								'nif-num-de-contribuinte-portugues-for-woocommerce'
+							),
+							label
 						),
-						label
-					),
-					hidden: false,
-				},
-			});
-		}
+						hidden: false,
+					},
+				});
+			}
 
-		setBillingNif(nextValue);
-	}, []);
+			setBillingNif(nextValue);
+		},
+		[setBillingNif, clearValidationError, setValidationErrors]
+	);
 
 	return (
 		<div className={className}>
@@ -162,7 +163,7 @@ const Block = (props) => {
 							}
 						)}
 					>
-						<input
+						<ValidatedTextInput
 							type="text"
 							id="billing_nif"
 							aria-label={label}
