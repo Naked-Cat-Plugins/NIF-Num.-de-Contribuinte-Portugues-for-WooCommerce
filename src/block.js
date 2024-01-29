@@ -66,7 +66,8 @@ const Block = (props) => {
 		showAllCountries || (!showAllCountries && 'PT' === billingCountry);
 
 	const invalidError = getValidationError(INVALID_ERROR_ID);
-	const hasError = invalidError?.hidden === false && invalidError?.message;
+	const hasError =
+		invalidError?.hidden === false && invalidError?.message !== '';
 	const errorMessage = invalidError?.message;
 
 	useEffect(() => {
@@ -100,6 +101,7 @@ const Block = (props) => {
 				namespace: EXTENSION_NAMESPACE,
 				data: {
 					billingNif,
+					isRequired,
 					validate,
 				},
 				cartPropsToReceive: ['extensions'],
@@ -111,6 +113,7 @@ const Block = (props) => {
 	}, [
 		extensionCartUpdate,
 		billingNif,
+		isRequired,
 		validate,
 		disablePlaceOrderButton,
 		enablePlaceOrderButton,

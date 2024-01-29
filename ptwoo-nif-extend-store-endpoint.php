@@ -62,9 +62,9 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	 * @return array
 	 */
 	public function store_api_data_callback() {
-		$customer    = wc()->customer;
-		$billing_nif = $this->get_session_billing_nif();
-		$validate    = $this->get_session_validate();
+		$customer     = wc()->customer;
+		$session_data = $this->get_session_data();
+		$billing_nif  = $session_data['billingNif'];
 
 		if ( null === $billing_nif ) {
 
@@ -76,25 +76,8 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 
 		$data = array(
 			'billingNif' => $billing_nif,
-			'isValid'    => true,
+			'isValid'    => $this->is_billing_nif_valid(),
 		);
-
-		$should_validate_nif = false;
-		if ( ! empty( $validate ) && ! empty( $billing_nif ) ) {
-			$show_all_countries = woocommerce_nif_show_all_countries();
-
-			if ( ! empty( $show_all_countries ) ) {
-				$should_validate_nif = true;
-			} elseif ( $customer instanceof \WC_Customer && 'PT' === $customer->get_billing_country() ) {
-				$should_validate_nif = true;
-			}
-		}
-
-		if ( ! empty( $should_validate_nif ) ) {
-			$is_valid = woocommerce_valida_nif( $billing_nif, true );
-
-			$data['isValid'] = $is_valid;
-		}
 
 		return $data;
 	}
@@ -116,40 +99,6 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	}
 
 	/**
-	 * Retrieve the session billing NIF.
-	 *
-	 * @return string
-	 */
-	public function get_session_billing_nif() {
-
-		$data = wc()->session->get( $this->get_name() );
-
-		$billing_nif = null;
-		if ( isset( $data['billingNif'] ) ) {
-			$billing_nif = sanitize_text_field( $data['billingNif'] );
-		}
-
-		return $billing_nif;
-	}
-
-	/**
-	 * Retrieve the session validation flag.
-	 *
-	 * @return string
-	 */
-	public function get_session_validate() {
-
-		$data = wc()->session->get( $this->get_name() );
-
-		$validate = false;
-		if ( isset( $data['validate'] ) ) {
-			$validate = boolval( $data['validate'] );
-		}
-
-		return $validate;
-	}
-
-	/**
 	 * Process order.
 	 *
 	 * @param  \WC_Order $order Order object.
@@ -157,29 +106,100 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	 */
 	public function process_order( $order ) {
 
-		if ( $order instanceof \WC_Order ) {
+		if ( ! $order instanceof \WC_Order ) {
+			return;
+		}
 
-			$billing_nif = $this->get_session_billing_nif();
+		$session_data = $this->get_session_data();
 
-			// Store NIF in order meta.
-			$order->update_meta_data( '_billing_nif', $billing_nif );
+		if ( empty( $session_data ) ) {
+			return;
+		}
 
-			// Store NIF in customer meta, if logged in.
-			$customer_id = $order->get_customer_id();
-			if ( ! empty( $customer_id ) ) {
-				$customer = new \WC_Customer( $customer_id );
-				$customer->update_meta_data( 'billing_nif', $billing_nif );
-				$customer->save_meta_data();
+		$billing_nif = $session_data['billingNif'];
+
+		// Store NIF in order meta.
+		$order->update_meta_data( '_billing_nif', $billing_nif );
+
+		// Store NIF in customer meta, if logged in.
+		$customer_id = $order->get_customer_id();
+		if ( ! empty( $customer_id ) ) {
+			$customer = new \WC_Customer( $customer_id );
+			$customer->update_meta_data( 'billing_nif', $billing_nif );
+			$customer->save_meta_data();
+		}
+
+		$order->save();
+
+		// Clear the extension's session data.
+		wc()->session->__unset( $this->get_name() );
+	}
+
+	/**
+	 * Retrieve session data.
+	 *
+	 * @return array
+	 */
+	public function get_session_data() {
+		$data = wc()->session->get( $this->get_name() );
+
+		if ( isset( $data['billingNif'] ) ) {
+			$data['billingNif'] = sanitize_text_field( $data['billingNif'] );
+		} else {
+			$data['billingNif'] = null;
+		}
+
+		if ( isset( $data['isRequired'] ) ) {
+			$data['isRequired'] = boolval( $data['isRequired'] );
+		} else {
+			$data['isRequired'] = false;
+		}
+
+		if ( isset( $data['validate'] ) ) {
+			$data['validate'] = boolval( $data['validate'] );
+		} else {
+			$data['validate'] = false;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Determine if the Billing NIF is valid.
+	 *
+	 * @return boolean
+	 */
+	public function is_billing_nif_valid() {
+		$customer     = wc()->customer;
+		$session_data = $this->get_session_data();
+		$billing_nif  = $session_data['billingNif'];
+		$is_required  = $session_data['isRequired'];
+		$to_validate  = $session_data['validate'];
+
+		if ( empty( $is_required ) && empty( $billing_nif ) ) {
+			return true;
+		}
+
+		if ( empty( $to_validate ) && ! empty( $is_required ) && ! empty( $billing_nif ) ) {
+			return true;
+		}
+
+		if ( empty( $to_validate ) && empty( $is_required ) && ! empty( $billing_nif ) ) {
+			return true;
+		}
+
+		if ( ! empty( $billing_nif ) ) {
+			$show_all_countries = woocommerce_nif_show_all_countries();
+
+			if (
+				! empty( $show_all_countries )
+				|| ( $customer instanceof \WC_Customer && 'PT' === $customer->get_billing_country() )
+			) {
+				$is_billing_nif_valid = woocommerce_valida_nif( $billing_nif, true );
+				return $is_billing_nif_valid;
 			}
-
-			$order->save();
 		}
 
-		// Clear the extension's session data, if set.
-		$session_data = wc()->session->get( $this->get_name() );
-
-		if ( ! empty( $session_data ) ) {
-			wc()->session->__unset( $this->get_name() );
-		}
+		return false;
 	}
 }

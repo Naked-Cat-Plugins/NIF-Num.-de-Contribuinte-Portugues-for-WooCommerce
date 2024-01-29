@@ -84,7 +84,7 @@ export default function Edit({ attributes, setAttributes }) {
 						}}
 					>
 						<TextInput
-							label={label || defaultLabel}
+							label={label}
 							required={isRequired}
 							value=""
 						/>
