@@ -36,8 +36,7 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 			)
 		);
 
-		add_action( 'woocommerce_store_api_checkout_update_order_meta', array( $this, 'checkout_update_order_meta' ) );
-		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'maybe_clear_session_key' ) );
+		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'process_order' ) );
 	}
 
 	/**
@@ -117,38 +116,6 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	}
 
 	/**
-	 * Update order meta.
-	 *
-	 * @param  \WC_Order $order The order object.
-	 * @return void
-	 */
-	public function checkout_update_order_meta( $order ) {
-
-		if ( ! $order instanceof \WC_Order ) {
-			return;
-		}
-
-		if ( ! $order->has_status( 'checkout-draft' ) ) {
-			return;
-		}
-
-		$billing_nif = $this->get_session_billing_nif();
-
-		// Store NIF in order meta.
-		$order->update_meta_data( '_billing_nif', $billing_nif );
-
-		// Store NIF in customer meta, if logged in.
-		$customer_id = $order->get_customer_id();
-		if ( ! empty( $customer_id ) ) {
-			$customer = new \WC_Customer( $customer_id );
-			$customer->update_meta_data( 'billing_nif', $billing_nif );
-			$customer->save_meta_data();
-		}
-
-		$order->save();
-	}
-
-	/**
 	 * Retrieve the session billing NIF.
 	 *
 	 * @return string
@@ -183,11 +150,32 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	}
 
 	/**
-	 * Clear the extension's session data, if set.
+	 * Process order.
 	 *
+	 * @param  \WC_Order $order Order object.
 	 * @return void
 	 */
-	public function maybe_clear_session_key() {
+	public function process_order( $order ) {
+
+		if ( $order instanceof \WC_Order ) {
+
+			$billing_nif = $this->get_session_billing_nif();
+
+			// Store NIF in order meta.
+			$order->update_meta_data( '_billing_nif', $billing_nif );
+
+			// Store NIF in customer meta, if logged in.
+			$customer_id = $order->get_customer_id();
+			if ( ! empty( $customer_id ) ) {
+				$customer = new \WC_Customer( $customer_id );
+				$customer->update_meta_data( 'billing_nif', $billing_nif );
+				$customer->save_meta_data();
+			}
+
+			$order->save();
+		}
+
+		// Clear the extension's session data, if set.
 		$session_data = wc()->session->get( $this->get_name() );
 
 		if ( ! empty( $session_data ) ) {
