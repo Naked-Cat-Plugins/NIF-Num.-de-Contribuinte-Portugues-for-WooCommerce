@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: NIF (Num. de Contribuinte Português) for WooCommerce\n"
-"POT-Creation-Date: 2022-09-20 13:58+0100\n"
+"POT-Creation-Date: 2024-01-29 12:49+0000\n"
 "PO-Revision-Date: 2017-03-27 15:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: woocommerce_nif.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -20,37 +20,35 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: webdados_invoicexpress_nag/webdados_invoicexpress_nag.php:25
-msgid "Are you already issuing automatic invoices on your WooCommerce store?"
+#: ptwoo-nif-extend-store-endpoint.php:51 woocommerce_nif.php:373
+msgid "NIF / NIPC"
 msgstr ""
 
 #: webdados_invoicexpress_nag/webdados_invoicexpress_nag.php:28
+msgid "Are you already issuing automatic invoices on your WooCommerce store?"
+msgstr ""
+
+#: webdados_invoicexpress_nag/webdados_invoicexpress_nag.php:33
 #, php-format
 msgid ""
 "If not, get to know our new plugin: %1$sInvoicing with InvoiceXpress for "
 "WooCommerce%2$s"
 msgstr ""
 
-#: webdados_invoicexpress_nag/webdados_invoicexpress_nag.php:31
+#: webdados_invoicexpress_nag/webdados_invoicexpress_nag.php:36
 msgid "https://invoicewoo.com/"
 msgstr ""
 
-#: webdados_invoicexpress_nag/webdados_invoicexpress_nag.php:36
-#, php-format
+#: webdados_invoicexpress_nag/webdados_invoicexpress_nag.php:42
+#, no-php-format
 msgid "Use the coupon <strong>webdados</strong> for 10% discount!"
 msgstr ""
 
-#: woocommerce_nif.php:63 woocommerce_nif.php:105 woocommerce_nif.php:129
-#: woocommerce_nif.php:144 woocommerce_nif.php:157 woocommerce_nif.php:196
-#: woocommerce_nif.php:223
-msgid "NIF / NIPC"
-msgstr ""
-
-#: woocommerce_nif.php:64 woocommerce_nif.php:130
+#: woocommerce_nif.php:83 woocommerce_nif.php:173
 msgid "Portuguese VAT identification number"
 msgstr ""
 
-#: woocommerce_nif.php:196 woocommerce_nif.php:223
+#: woocommerce_nif.php:274 woocommerce_nif.php:314
 #, php-format
 msgid "You have entered an invalid %s for Portugal."
 msgstr ""
