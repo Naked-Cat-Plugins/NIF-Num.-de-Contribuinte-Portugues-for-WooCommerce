@@ -76,7 +76,7 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 
 		$data = array(
 			'billingNif' => $billing_nif,
-			'isValid'    => $this->is_billing_nif_valid(),
+			'isValid'    => $this->is_nif_valid(),
 		);
 
 		return $data;
@@ -165,41 +165,42 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 	}
 
 	/**
-	 * Determine if the Billing NIF is valid.
+	 * Determine if the NIF is valid.
 	 *
 	 * @return boolean
 	 */
-	public function is_billing_nif_valid() {
-		$customer     = wc()->customer;
-		$session_data = $this->get_session_data();
-		$billing_nif  = $session_data['billingNif'];
-		$is_required  = $session_data['isRequired'];
-		$to_validate  = $session_data['validate'];
+	public function is_nif_valid() {
+		$session_data     = $this->get_session_data();
+		$billing_nif      = $session_data['billingNif'];
+		$is_required      = $session_data['isRequired'];
+		$needs_validation = $session_data['validate'];
 
-		if ( empty( $is_required ) && empty( $billing_nif ) ) {
+		// Skip if NIF is not required, needs validation but it's empty.
+		if ( ! $is_required && $needs_validation && empty( $billing_nif ) ) {
 			return true;
 		}
 
-		if ( empty( $to_validate ) && ! empty( $is_required ) && ! empty( $billing_nif ) ) {
+		// Check if NIF is required and not provided.
+		if ( $is_required && empty( $billing_nif ) ) {
+			return false;
+		}
+
+		// If validation is not needed, consider it valid.
+		if ( ! $needs_validation ) {
 			return true;
 		}
 
-		if ( empty( $to_validate ) && empty( $is_required ) && ! empty( $billing_nif ) ) {
-			return true;
+		$customer           = wc()->customer;
+		$show_all_countries = woocommerce_nif_show_all_countries();
+
+		if (
+			! empty( $show_all_countries )
+			|| ( $customer instanceof \WC_Customer && 'PT' === $customer->get_billing_country() )
+		) {
+			$is_nif_valid = woocommerce_valida_nif( $billing_nif, true );
+			return $is_nif_valid;
 		}
 
-		if ( ! empty( $billing_nif ) ) {
-			$show_all_countries = woocommerce_nif_show_all_countries();
-
-			if (
-				! empty( $show_all_countries )
-				|| ( $customer instanceof \WC_Customer && 'PT' === $customer->get_billing_country() )
-			) {
-				$is_billing_nif_valid = woocommerce_valida_nif( $billing_nif, true );
-				return $is_billing_nif_valid;
-			}
-		}
-
-		return false;
+		return true;
 	}
 }
