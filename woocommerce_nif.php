@@ -338,9 +338,9 @@ add_action(
 					// O primeiro digíto tem de ser 1, 2, 5, 6, 8 ou 9
 					// Ou não, se optarmos por ignorar esta "regra"
 					if (
-					in_array( $nif_split[0], array( '1', '2', '5', '6', '8', '9' ), true )
-					||
-					$ignore_first
+						in_array( $nif_split[0], array( '1', '2', '5', '6', '8', '9' ), true )
+						||
+						$ignore_first
 					) {
 						// Calculamos o dígito de controlo
 						$check_digit = 0;
