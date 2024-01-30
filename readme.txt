@@ -71,7 +71,8 @@ Classic checkout - Add this to your theme’s functions.php file or code snippet
 	return 120;
 } );`
 
-Blocks checkout - Move the NIF block up or down as wanted. We do not recommend moving this field above the billing and shipping addresses, as its visibility may depend on the chosen country.
+Blocks checkout - For now, the block is fixed after the billing address and before the shipping options. We’re working on making it possible to move the block wehre you want.
+Future instructions for the Block checkout - Move the NIF block up or down as wanted. We do not recommend moving this field above the billing and shipping addresses, as its visibility may depend on the chosen country.
 
 = Is this plugin compliant with the new EU General Data Protection Regulation (GDPR)? =
 
