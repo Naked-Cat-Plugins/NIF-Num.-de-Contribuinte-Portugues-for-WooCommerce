@@ -9,6 +9,7 @@
 		<exclude name="Squiz.Commenting.FileComment.Missing"/>
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
 		<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 		<!-- Fuck Yoda conditions! -->
 		<exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
 	</rule>

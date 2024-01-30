@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: NIF (Num. de Contribuinte Português) for WooCommerce\n"
-"POT-Creation-Date: 2024-01-29 12:49+0000\n"
+"POT-Creation-Date: 2024-01-30 09:58+0000\n"
 "PO-Revision-Date: 2017-03-27 15:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: ptwoo-nif-extend-store-endpoint.php:51 woocommerce_nif.php:373
+#: ptwoo-nif-extend-store-endpoint.php:55 woocommerce_nif.php:373
 msgid "NIF / NIPC"
 msgstr ""
 

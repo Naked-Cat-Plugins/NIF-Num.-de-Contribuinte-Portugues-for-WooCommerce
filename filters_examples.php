@@ -3,6 +3,11 @@
  * Hooks examples
  **/
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Change NIF field label - Only for the classic checkout
  *

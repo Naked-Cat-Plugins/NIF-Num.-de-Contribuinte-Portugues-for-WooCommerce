@@ -1,6 +1,11 @@
 <?php
 use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
 
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class for extending the WooCommerce Store API
  */

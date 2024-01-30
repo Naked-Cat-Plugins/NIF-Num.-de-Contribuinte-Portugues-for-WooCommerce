@@ -1,12 +1,12 @@
 === NIF (Num. de Contribuinte Português) for WooCommerce ===
 Contributors: webdados, ptwooplugins
 Tags: woocommerce, ecommerce, e-commerce, nif, nipc, vat, tax, Portugal, webdados
-Author URI: https://ptwooplugins.com
-Plugin URI: https://www.webdados.pt/wordpress/plugins/nif-de-contribuinte-portugues-woocommerce-wordpress/
-Requires at least: 5.0
+Requires at least: 5.6
 Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 5.6
+Stable tag: 6.0
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 This plugin adds the Portuguese NIF/NIPC as a new field to WooCommerce checkout and order details, if the billing address / customer is from Portugal.
 
@@ -96,9 +96,11 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
-= 6.0 - ? =
-* [NEW] Block-based compatibility (beta)
-* [DEV] Tested with WordPress ? and WooCommerce ?
+= 6.0 - 2024-01-30 =
+* [NEW] Block-based Checkout compatibility (in beta)
+* [TWEAK] Improve filters_examples.php
+* [DEV] Requires WordPress 5.6 and WooCommerce 6.0
+* [DEV] Tested with WordPress 6.5-alpha-57378 and WooCommerce 8.5.2
 
 = 5.6 - 2024-01-10 =
 * Fix checkout validation feedback on WooCommerce 8.5 and above
