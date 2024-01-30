@@ -1,6 +1,6 @@
 === NIF (Num. de Contribuinte Português) for WooCommerce ===
 Contributors: webdados, ptwooplugins
-Tags: woocommerce, ecommerce, e-commerce, nif, nipc, vat, tax, portugal, webdados
+Tags: woocommerce, ecommerce, e-commerce, nif, nipc, vat, tax, Portugal, webdados
 Author URI: https://ptwooplugins.com
 Plugin URI: https://www.webdados.pt/wordpress/plugins/nif-de-contribuinte-portugues-woocommerce-wordpress/
 Requires at least: 5.0
@@ -17,8 +17,10 @@ This plugin adds the Portuguese VAT identification number (NIF/NIPC) as a new fi
 = Features: =
 
 * Adds the Portuguese VAT identification number (NIF/NIPC) to the WooCommerce Checkout fields, Order admin fields, Order Emails and "Thank You" page;
-* It's possible to edit the customer's NIF/NIPC field on "My Account - Billing Address" and on the User edit screen on wp-admin.
-* NIF/NIPC check digit validation (if activated via filter)
+* It’s possible to edit the customer’s NIF/NIPC field on "My Account - Billing Address" and on the User edit screen on wp-admin.
+* NIF/NIPC check digit validation (if activated via filter, or block option)
+* WooCommerce High-Performance Order Storage compatible
+* WooCommerce Checkout Block compatible (in beta)
 
 = Are you already issuing automatic invoices on your WooCommerce store? =
 
@@ -26,10 +28,10 @@ If not, get to know our new plugin: [Invoicing with InvoiceXpress for WooCommerc
 
 == Already know our other WooCommerce (premium) plugins? ==
 
-* [Portuguese Postcodes for WooCommerce](https://ptwooplugins.com/product/portuguese-postcodes-for-woocommerce-technical-support/) - Automatic filling of the address details at the checkout, including street name and neighbourhood, based on the postal code
+* [Portuguese Postcodes for WooCommerce](https://ptwooplugins.com/product/portuguese-postcodes-for-woocommerce-technical-support/) - Automatic filling of the address details at the checkout, including street name and neighborhood, based on the postal code
 * [Invoicing with InvoiceXpress for WooCommerce](https://wordpress.org/plugins/woo-billing-with-invoicexpress/) - Automatically issue invoices directly from the WooCommerce order
 * [DPD Portugal for WooCommerce](https://ptwooplugins.com/product/dpd-portugal-for-woocommerce/) - Create shipping and return guide in the DPD webservice directly from the WooCommerce order
-* [Simple WooCommerce Order Approval](https://ptwooplugins.com/product/simple-woocommerce-order-approval/) - The hassle-free solution for WooCommerce orders approval before payment
+* [Simple WooCommerce Order Approval](https://ptwooplugins.com/product/simple-woocommerce-order-approval/) - The hassle-free solution for WooCommerce order approval before payment
 * [Shop as Client for WooCommerce](https://ptwooplugins.com/product/shop-as-client-for-woocommerce-pro-add-on/) - Quickly create orders on behalf of your customers
 * [Taxonomy/Term and Role based Discounts for WooCommerce](https://ptwooplugins.com/product/taxonomy-term-and-role-based-discounts-for-woocommerce-pro-add-on/) - Easily create bulk discount rules for products based on any taxonomy terms (built-in or custom)
 * [DPD / SEUR / Geopost Pickup and Lockers network for WooCommerce](https://ptwooplugins.com/product/dpd-seur-geopost-pickup-and-lockers-network-for-woocommerce/) - Deliver your WooCommerce orders on the DPD and SEUR Pickup network of Parcelshops and Lockers in 9 European countries
@@ -42,34 +44,43 @@ If not, get to know our new plugin: [Invoicing with InvoiceXpress for WooCommerc
 
 = How to make the NIF field required? =
 
-Just add this to your theme's functions.php file (v3.0 and up):
+Classic checkout - Add this to your theme’s functions.php file or code snippets plugin:
 
 `add_filter( 'woocommerce_nif_field_required', '__return_true' );`
 
-= Is it possible to validate the check digit in order to ensure a valid Portuguese NIF/NIPC is entered by the customer? =
+Blocks checkout - Activate the "Required" option on the NIF block.
 
-Yes, it is! Just add this to your theme's functions.php file (v3.0 and up):
+= Is it possible to validate the check digit to ensure a valid Portuguese NIF/NIPC is entered by the customer? =
+
+Yes, it is!
+
+Classic checkout - Add this to your theme’s functions.php file or code snippets plugin:
 
 `add_filter( 'woocommerce_nif_field_validate', '__return_true' );`
 
+Blocks checkout - Activate the "Validate" option on the NIF block.
+
 We only recommend validating the NIF if your shop only sells to Portugal.
+
+= How to change the NIF field position on the checkout? =
+
+Classic checkout - Add this to your theme’s functions.php file or code snippets plugin:
+
+`add_filter( 'woocommerce_nif_field_priority', function( $priority) {
+	// Default is 120 - Adjust the number to move the field up (lower number) or down (higher number)
+	return 120;
+} );`
+
+Blocks checkout - Move the NIF block up or down as wanted. We do not recommend moving this field above the billing and shipping addresses, as its visibility may depend on the chosen country.
 
 = Is this plugin compliant with the new EU General Data Protection Regulation (GDPR)? =
 
-First of all, it's the website owner responsibility to make your whole website compliant because no personal details whatsoever are transmitted to us, the plugin developers.
+First of all, it’s the website owner’s responsibility to make your whole website compliant because no personal details whatsoever are transmitted to us, the plugin developers.
 Anyway, we can help you by documenting how this plugin handles the collected data:
-* The NIF/NIPC field is collected via the checkout process and stored as an order meta value, alongside with all the other WooCommerce order fields;
-* The NIF/NIPC field can also be set on the "My Account - Billing Address" form and it's then stored as a user meta value, alongside with all the other WordPress and WooCommerce user fields;
+* The NIF/NIPC field is collected via the checkout process and stored as an order meta value, alongside all the other WooCommerce order fields;
+* The NIF/NIPC field can also be set on the "My Account - Billing Address" form and it’s then stored as a user meta value, alongside all the other WordPress and WooCommerce user fields;
 * The NIF/NIPC field is shown and editable on the order edit and user edit screens on the backend, by the store owner;
 * The NIF/NIPC field is shown on the order transactional emails;
-
-= Is this plugin compatible with the new WooCommerce High-Performance Order Storage? =
-
-Yes.
-
-= Is this plugin compatible with the new WooCommerce Checkout Block? =
-
-Not yet. Working on it.
 
 = I need help, can I get technical support? =
 
@@ -77,13 +88,17 @@ This is a free plugin. It’s our way of giving back to the wonderful WordPress 
 
 There’s a support tab on the top of this page, where you can ask the community for help. We’ll try to keep an eye on the forums but we cannot promise to answer support tickets.
 
-If you reach us by email or any other direct contact means, we’ll assume you are in need of urgent, premium, and of course, paid-for support.
+If you reach us by email or any other direct contact means, we’ll assume you need, premium, and of course, paid-for support.
 
 = Where do I report security vulnerabilities found in this plugin? =  
  
 You can report any security bugs found in the source code of this plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/nif-num-de-contribuinte-portugues-for-woocommerce). The Patchstack team will assist you with verification, CVE assignment and take care of notifying the developers of this plugin.
 
 == Changelog ==
+
+= 6.0 - ? =
+* [NEW] Block-based compatibility (beta)
+* [DEV] Tested with WordPress ? and WooCommerce ?
 
 = 5.6 - 2024-01-10 =
 * Fix checkout validation feedback on WooCommerce 8.5 and above
@@ -155,7 +170,7 @@ You can report any security bugs found in the source code of this plugin through
 * Add NIF to the WooCommerce REST `orders` and `customers` endpoints
 
 = 4.1.3 =
-* Fixed a fatal error when the `woocommerce_nif_field_validate` was set to true and the customer doesn't have a country associated yet
+* Fixed a fatal error when the `woocommerce_nif_field_validate` was set to true and the customer doesn’t have a country associated yet
 * Tested with WooCommerce 3.5.5 and WordPress 5.0.3
 
 = 4.1.2 =
@@ -184,20 +199,20 @@ You can report any security bugs found in the source code of this plugin through
 * Improved the FAQ
 
 = 3.2 =
-* Fixed a bug where if the validation is active but the field is not required, the checkout wouldn't go ahead if the client didn't fill the field
+* Fixed a bug where if the validation is active but the field is not required, the checkout wouldn’t go ahead if the client didn’t fill the field
 * Validation of the field on the "My Account - Billing Address" form
 * Bumped `Tested up to` and `WC tested up to` tags
 * Better code formatting standards
 * Improved the FAQ
 
 = 3.1 =
-* Removed the translation files from the plugin `lang` folder (the translations are now managed on WordPress.org's GlotPress tool and will be automatically downloaded from there)
+* Removed the translation files from the plugin `lang` folder (the translations are now managed on WordPress.org’s GlotPress tool and will be automatically downloaded from there)
 * Tested with WooCommerce 3.2
 * Added `WC tested up to` tag on the plugin main file
 * Bumped `Tested up to` tag
 
 = 3.0 =
-* It's now possible to validate the Portuguese NIF/NIPC check digit entered by the customer (by returninig true on the `woocommerce_nif_field_validate` filter)
+* It’s now possible to validate the Portuguese NIF/NIPC check digit entered by the customer (by returninig true on the `woocommerce_nif_field_validate` filter)
 * Tested with WooCommerce 3.0.0-rc.2
 * Changed version tests from 2.7 to 3.0
 * New `autocomplete` parameter set to 'on'

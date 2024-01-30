@@ -4,7 +4,7 @@
  **/
 
 /**
- * Change NIF field label
+ * Change NIF field label - Only for the classic checkout
  *
  * @param string $label The label.
  */
@@ -15,7 +15,7 @@ function woocommerce_nif_field_label( $label ) {
 add_filter( 'woocommerce_nif_field_label', 'woocommerce_nif_field_label' );
 
 /**
- * Change NIF field placeholder
+ * Change NIF field placeholder - Only for the classic checkout
  *
  * @param string $placeholder The placeholder.
  */
@@ -25,11 +25,13 @@ function woocommerce_nif_field_placeholder( $placeholder ) {
 }
 add_filter( 'woocommerce_nif_field_placeholder', 'woocommerce_nif_field_placeholder' );
 
-// Make NIF field required.
+/**
+ * Requires NIF field - Only for the classic checkout
+ */
 add_filter( 'woocommerce_nif_field_required', '__return_true' );
 
 /**
- * Make NIF field wide
+ * Make NIF field wide - Only for the classic checkout
  *
  * @param string $class The CSS class.
  */
@@ -41,12 +43,11 @@ function woocommerce_nif_field_class( $class ) {
 	return $class;
 }
 add_filter( 'woocommerce_nif_field_class', 'woocommerce_nif_field_class' );
-
 // Make NIF field not clear.
 add_filter( 'woocommerce_nif_field_clear', '__return_false' );
 
 /**
- * Disable autocomplete for NIF field
+ * Disable autocomplete for NIF field - Only for the classic checkout
  *
  * @param string $autocomplete Autocomplete on or off.
  */
@@ -57,7 +58,7 @@ function woocommerce_nif_field_autocomplete( $autocomplete ) {
 add_filter( 'woocommerce_nif_field_autocomplete', 'woocommerce_nif_field_autocomplete' );
 
 /**
- * Change NIF field priority
+ * Change NIF field priority - Only for the classic checkout
  *
  * @param integer $priority NIF field priority.
  */
@@ -68,7 +69,7 @@ function woocommerce_nif_field_priority( $priority ) {
 add_filter( 'woocommerce_nif_field_priority', 'woocommerce_nif_field_priority' );
 
 /**
- * Change NIF field maxlength
+ * Change NIF field maxlength - Classic + Blocks checkout
  *
  * @param integer $maxlength NIF field maxium length.
  */
@@ -78,8 +79,17 @@ function woocommerce_nif_field_maxlength( $maxlength ) {
 }
 add_filter( 'woocommerce_nif_field_maxlength', 'woocommerce_nif_field_maxlength' );
 
-// Validate the NIF check digit?
+/**
+ * Show NIF for all countries and not only Portugal - Classic + Blocks checkout
+ */
+add_filter( 'woocommerce_nif_show_all_countries', '__return_true' );
+
+/**
+ * Validate NIF field checkdigit - Only for the classic checkout
+ */
 add_filter( 'woocommerce_nif_field_validate', '__return_true' );
 
-// De-activate the NIF field javascript toggle on the checkout page, and use the old mechanism.
+/**
+ * De-activate the NIF field javascript toggle on the checkout page, and use the old mechanism - Only for the classic checkout
+ */
 add_filter( 'woocommerce_nif_use_javascript', '__return_false' );
