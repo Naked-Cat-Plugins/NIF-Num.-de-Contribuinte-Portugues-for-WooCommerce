@@ -6,7 +6,8 @@
 npm install
 ```
 
-To format and rebuild
+## To format and rebuild
+
 ```
 npm run format ./src
 npm run build
