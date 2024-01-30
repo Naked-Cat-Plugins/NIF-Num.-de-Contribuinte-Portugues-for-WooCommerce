@@ -89,8 +89,7 @@ class PTWoo_NIF_Blocks_Integration implements IntegrationInterface {
 
 		wp_set_script_translations(
 			'ptwoo-nif-block-editor',
-			'nif',
-			PTWOO_NIF_PLUGIN_DIR . 'lang'
+			'nif-num-de-contribuinte-portugues-for-woocommerce'
 		);
 	}
 
