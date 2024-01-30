@@ -97,6 +97,9 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
+= 6.1 - ? =
+* [FIX] Correctly load block i18n on the editor
+
 = 6.0 - 2024-01-30 =
 * [NEW] Block-based Checkout compatibility (in beta)
 * [TWEAK] Improve filters_examples.php
