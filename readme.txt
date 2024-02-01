@@ -4,7 +4,7 @@ Tags: woocommerce, ecommerce, e-commerce, nif, nipc, vat, tax, Portugal, webdado
 Requires at least: 5.6
 Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 6.0
+Stable tag: 6.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -97,8 +97,10 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
-= 6.1 - ? =
-* [FIX] Correctly load block i18n on the editor
+= 6.1 - 2024-02-01 =
+* [FIX] Correctly load block i18n on the block javascript files
+* [DEV] Declare cart anc checkout blocks compatibility (just in case)
+* [DEV] Tested with WordPress 6.5-alpha-57505 and WooCommerce 8.6-0-beta.1
 
 = 6.0 - 2024-01-30 =
 * [NEW] Block-based Checkout compatibility (in beta)
