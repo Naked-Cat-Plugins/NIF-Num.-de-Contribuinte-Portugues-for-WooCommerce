@@ -9,7 +9,6 @@ import { TextInput } from '@woocommerce/blocks-checkout';
 /**
  * Internal dependencies
  */
-import './style.scss';
 import FormStep from './edit/form-step';
 
 export default function Edit({ attributes, setAttributes }) {

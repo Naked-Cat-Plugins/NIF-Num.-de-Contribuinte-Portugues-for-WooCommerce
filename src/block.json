@@ -13,6 +13,5 @@
 	},
 	"parent": ["woocommerce/checkout-fields-block"],
 	"attributes": {},
-	"textdomain": "nif-num-de-contribuinte-portugues-for-woocommerce",
-	"editorStyle": "file:../../../build/style-ptwoo-nif-block.css"
+	"textdomain": "nif-num-de-contribuinte-portugues-for-woocommerce"
 }
