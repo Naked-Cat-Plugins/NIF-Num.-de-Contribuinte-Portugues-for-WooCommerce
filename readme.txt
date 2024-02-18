@@ -4,7 +4,7 @@ Tags: woocommerce, ecommerce, e-commerce, nif, nipc, vat, tax, Portugal, webdado
 Requires at least: 5.6
 Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 6.1
+Stable tag: 6.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -96,6 +96,10 @@ If you reach us by email or any other direct contact means, we’ll assume you n
 You can report any security bugs found in the source code of this plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/nif-num-de-contribuinte-portugues-for-woocommerce). The Patchstack team will assist you with verification, CVE assignment and take care of notifying the developers of this plugin.
 
 == Changelog ==
+
+= 6.2 - 2024-02-18 =
+* [DEV] Simplify block build process and implement SVG accessibility attributes
+* [DEV] Tested with WordPress 6.5-beta1-57650 and WooCommerce 8.6.0
 
 = 6.1 - 2024-02-01 =
 * [FIX] Correctly load block i18n on the block javascript files
