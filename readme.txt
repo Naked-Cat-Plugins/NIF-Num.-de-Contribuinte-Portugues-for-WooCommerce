@@ -1,6 +1,6 @@
 === NIF (Num. de Contribuinte Português) for WooCommerce ===
 Contributors: webdados, ptwooplugins
-Tags: woocommerce, ecommerce, e-commerce, nif, nipc, vat, tax, Portugal, webdados
+Tags: ecommerce, nif, nipc, vat, tax
 Requires at least: 5.6
 Tested up to: 6.5
 Requires PHP: 7.0
