@@ -101,6 +101,7 @@ You can report any security bugs found in the source code of this plugin through
 == Changelog ==
 
 = 6.3 - 2024-03-27 =
+* [DEV] Set `Requires Plugins` tag to `woocommerce`
 * [DEV] Tested with WordPress 6.5-RC3-57875 and WooCommerce 8.8.0-beta.1
 
 = 6.2 - 2024-02-18 =
