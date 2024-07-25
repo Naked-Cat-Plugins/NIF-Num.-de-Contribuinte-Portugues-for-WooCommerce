@@ -3,16 +3,16 @@
  * Plugin Name: NIF (Num. de Contribuinte Português) for WooCommerce
  * Plugin URI: https://www.webdados.pt/wordpress/plugins/nif-de-contribuinte-portugues-woocommerce-wordpress/
  * Description: This plugin adds the Portuguese VAT identification number (NIF/NIPC) as a new field to WooCommerce checkout and order details, if the billing address is from Portugal.
- * Version: 6.3
+ * Version: 6.4
  * Author: PT Woo Plugins (by Webdados)
  * Author URI: https://ptwooplugins.com
  * Text Domain: nif-num-de-contribuinte-portugues-for-woocommerce
  * Domain Path: /lang
  * Requires at least: 5.6
- * Tested up to: 6.5
+ * Tested up to: 6.6
  * Requires PHP: 7.0
  * WC requires at least: 6.0
- * WC tested up to: 8.8
+ * WC tested up to: 9.1
  * Requires Plugins: woocommerce
  **/
 
@@ -30,7 +30,7 @@ define( 'PTWOO_NIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 add_action(
 	'plugins_loaded',
-	function() {
+	function () {
 		if ( class_exists( 'WooCommerce' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '6.0', '>=' ) ) {
 
 			/**
@@ -155,7 +155,7 @@ add_action(
 			 * @param object  $customer The customer.
 			 * @param integer $user_id The user ID.
 			 */
-			function woocommerce_nif_ajax_get_customer_details( $customer_data, $customer, $user_id ) {
+			function woocommerce_nif_ajax_get_customer_details( $customer_data, $customer, $user_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 				if ( ( isset( $customer_data['billing']['country'] ) && $customer_data['billing']['country'] === 'PT' ) || woocommerce_nif_show_all_countries() ) {
 					$customer_data['billing']['nif'] = $customer->get_meta( 'billing_nif' );
 				}
@@ -271,8 +271,7 @@ add_action(
 							)
 						) {
 							wc_add_notice(
-								/* translators: %s NIF field name */
-								sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . woocommerce_nif_field_label() . '</strong>' ),
+								woocommerce_nif_invalid_message(),
 								'error',
 								array(
 									'id' => 'billing_nif',
@@ -295,7 +294,7 @@ add_action(
 			 * @param string $load_address Type of address e.g. billing or shipping.
 			 * @param array  $address      The address fields.
 			 */
-			function woocommerce_nif_after_save_address_validation( $user_id, $load_address, $address ) {
+			function woocommerce_nif_after_save_address_validation( $user_id, $load_address, $address ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 				if ( $load_address === 'billing' ) {
 					if ( woocommerce_nif_field_validate() ) {
 						$country = wc_clean( isset( $_POST['billing_country'] ) ? $_POST['billing_country'] : '' ); //phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, (because wc_clean takes care of it)
@@ -409,6 +408,19 @@ add_action(
 			function woocommerce_nif_show_all_countries() {
 				return apply_filters( 'woocommerce_nif_show_all_countries', false );
 			}
+
+			/**
+			 * Return the invalid field message.
+			 *
+			 * @return string
+			 */
+			function woocommerce_nif_invalid_message() {
+				return apply_filters(
+					'woocommerce_nif_invalid_message',
+					/* translators: %s NIF field name */
+					sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . woocommerce_nif_field_label() . '</strong>' )
+				);
+			}
 		}
 	},
 	1
@@ -417,7 +429,7 @@ add_action(
 /* HPOS & Checkout Blocks Compatible */
 add_action(
 	'before_woocommerce_init',
-	function() {
+	function () {
 		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
@@ -428,13 +440,13 @@ add_action(
 /* Checkout Block Compatible */
 add_action(
 	'woocommerce_blocks_loaded',
-	function() {
+	function () {
 		require_once __DIR__ . '/ptwoo-nif-blocks-integration.php';
 		require_once __DIR__ . '/ptwoo-nif-extend-store-endpoint.php';
 
 		add_action(
 			'woocommerce_blocks_checkout_block_registration',
-			function( $integration_registry ) {
+			function ( $integration_registry ) {
 				$integration_registry->register( new PTWoo_NIF_Blocks_Integration() );
 			}
 		);
@@ -446,7 +458,7 @@ add_action(
 /* InvoiceXpress nag */
 add_action(
 	'admin_init',
-	function() {
+	function () {
 		if (
 		( ! defined( 'WEBDADOS_INVOICEXPRESS_NAG' ) )
 		&&

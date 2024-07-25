@@ -31,6 +31,7 @@ const Block = (props) => {
 		validate,
 		maxLength,
 		showAllCountries,
+		invalidMessage,
 		className,
 		validation: {
 			setValidationErrors,
@@ -76,14 +77,7 @@ const Block = (props) => {
 		} else {
 			setValidationErrors({
 				[INVALID_ERROR_ID]: {
-					message: sprintf(
-						__(
-							/* translators: %s field label */
-							'Please enter a valid %s',
-							'nif-num-de-contribuinte-portugues-for-woocommerce'
-						),
-						label
-					),
+					message: invalidMessage,
 					hidden: false,
 				},
 			});
@@ -129,14 +123,7 @@ const Block = (props) => {
 			if (nextValue.length === 0 && isRequired) {
 				setValidationErrors({
 					[INVALID_ERROR_ID]: {
-						message: sprintf(
-							__(
-								/* translators: %s field label */
-								'Please enter a valid %s',
-								'nif-num-de-contribuinte-portugues-for-woocommerce'
-							),
-							label
-						),
+						message: invalidMessage,
 						hidden: false,
 					},
 				});

@@ -10,6 +10,7 @@ const {
 	defaultValidate,
 	defaultMaxLength,
 	defaultShowAllCountries,
+	defaultInvalidMessage,
 } = getSetting('ptwoo_nif_data', '');
 
 export default {
@@ -58,5 +59,9 @@ export default {
 	showAllCountries: {
 		type: 'boolean',
 		default: defaultShowAllCountries,
+	},
+	invalidMessage: {
+		type: 'boolean',
+		default: defaultInvalidMessage,
 	},
 };
