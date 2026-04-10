@@ -474,4 +474,7 @@ add_action(
 	}
 );
 
+/* Recomment ifthenpay */
+require_once 'recommend-ifthenpay/class-recommend-ifthenpay.php';
+
 /* If you're reading this you must know what you're doing ;-) Greetings from sunny Portugal! */

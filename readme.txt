@@ -92,7 +92,7 @@ This is a free plugin. It’s our way of giving back to the wonderful WordPress 
 
 There’s a support tab on the top of this page, where you can ask the community for help. We’ll try to keep an eye on the forums but we cannot promise to answer support tickets.
 
-If you reach us by email or any other direct contact means, we’ll assume you need, premium, and of course, paid-for support.
+If you reach us by email or any other direct contact method, we’ll assume you need premium, paid-for support.
 
 = Where do I report security vulnerabilities found in this plugin? =  
  
