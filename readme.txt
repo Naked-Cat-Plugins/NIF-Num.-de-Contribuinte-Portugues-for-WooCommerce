@@ -2,7 +2,7 @@
 Contributors: nakedcatplugins, webdados
 Tags: ecommerce, nif, nipc, vat, tax
 Requires at least: 5.8
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.2
 Stable tag: 6.7
 License: GPLv3
@@ -100,11 +100,13 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
-= 6.8 - 2026-04-10 =
+= 7.0 - 2026-04-10 =
 * [NEW] Free plugin ownership transferred from [Marco Almeida | Webdados](https://profiles.wordpress.org/webdados/) to [Naked Cat Plugins](https://profiles.wordpress.org/nakedcatplugins/) on WordPress.org - No worries, we’re the same people :-)
+* [TWEAK] Added [our ifthenpay plugin](https://wordpress.org/plugins/multibanco-ifthen-software-gateway-for-woocommerce/) as a suggested payment gateway in WooCommerce, if still not present (can be removed by setting the `NAKEDCAT_RECOMMEND_IFTHENPAY` constant to true)
+* [DEV] Removed `load_plugin_textdomain` call as WordPress handles it
 * [DEV] Improved PHPCS rules
 * [DEV] Implement release automations via GitHub Actions
-* [DEV] Tested up to ...
+* [DEV] Tested up to WordPress 7.0-RC2-62197 and WooCommerce 10.7.0-beta.2
 
 = 6.7 - 2025-06-24 =
 * [TWEAK] Improve the mechanism to keep the "Invoicing with InvoiceXpress for WooCommerce" admin notice from showing to the same user in the next 120 days after dismissal
