@@ -8,6 +8,7 @@
 	<exclude-pattern>/node_modules/*</exclude-pattern>
 	<exclude-pattern>/build/*</exclude-pattern>
 	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>/recommend-ifthenpay/*</exclude-pattern>
 
 	<!-- Only scan PHP files. -->
 	<arg name="extensions" value="php"/>
