@@ -2,9 +2,9 @@
 Contributors: nakedcatplugins, webdados
 Tags: ecommerce, nif, nipc, vat, tax
 Requires at least: 5.8
-Tested up to: 7.1
+Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 7.0
+Stable tag: 7.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -100,8 +100,9 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
-= 7.1 - 2026-04-12 =
+= 7.2 - 2026-04-12 =
 * [FIX] PHP fatal error, introduced in 7.0, in specific scenarios
+* [FIX] Version number
 
 = 7.0 - 2026-04-10 =
 * [NEW] Plugin ownership transferred from [Marco Almeida | Webdados](https://profiles.wordpress.org/webdados/) to [Naked Cat Plugins](https://profiles.wordpress.org/nakedcatplugins/) on WordPress.org - No worries, we’re the same people :-)
