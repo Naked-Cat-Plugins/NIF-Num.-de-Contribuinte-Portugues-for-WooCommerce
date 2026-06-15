@@ -11,7 +11,7 @@
  * Tested up to:         7.0
  * Requires PHP:         7.2
  * WC requires at least: 7.1
- * WC tested up to:      10.7
+ * WC tested up to:      10.8
  * Requires Plugins:     woocommerce
  **/
 
@@ -23,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants.
-define( 'PTWOO_NIF_VERSION', '5.6' );
 define( 'PTWOO_NIF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PTWOO_NIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

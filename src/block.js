@@ -62,6 +62,20 @@ const Block = (props) => {
 	const [prevBillingNif, setPrevBillingNif] = useState(
 		extensions[EXTENSION_NAMESPACE]?.billingNif
 	);
+	const [hasSyncedInitialValue, setHasSyncedInitialValue] = useState(false);
+
+	// The cart's extension data (and therefore the customer's saved NIF) is
+	// fetched asynchronously, so it's not yet available when the state above
+	// is initialized. Once it arrives, sync it into the field a single time
+	// so it doesn't overwrite anything the customer has already typed.
+	useEffect(() => {
+		const savedBillingNif = extensions[EXTENSION_NAMESPACE]?.billingNif;
+		if (!hasSyncedInitialValue && savedBillingNif) {
+			setBillingNif(savedBillingNif);
+			setPrevBillingNif(savedBillingNif);
+			setHasSyncedInitialValue(true);
+		}
+	}, [extensions[EXTENSION_NAMESPACE]?.billingNif, hasSyncedInitialValue]);
 
 	const displayBillingNif =
 		showAllCountries || (!showAllCountries && 'PT' === billingCountry);
