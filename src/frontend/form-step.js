@@ -33,21 +33,23 @@ const FormStep = ({
 			)}
 		>
 			{title && <legend className="screen-reader-text">{title}</legend>}
-			{title && (
-				<FormStepHeading
-					title={title}
-					stepHeadingContent={stepHeadingContent()}
-				/>
-			)}
-			<div className="wc-block-components-checkout-step__container">
-				{description && (
-					<p className="wc-block-components-checkout-step__description">
-						{description}
-					</p>
-				)}
-				<div className="wc-block-components-checkout-step__content">
-					{children}
+			{(title || description) && (
+				<div className="wc-block-components-checkout-step__heading-container">
+					{title && (
+						<FormStepHeading
+							title={title}
+							stepHeadingContent={stepHeadingContent()}
+						/>
+					)}
+					{description && (
+						<p className="wc-block-components-checkout-step__description">
+							{description}
+						</p>
+					)}
 				</div>
+			)}
+			<div className="wc-block-components-checkout-step__content">
+				{children}
 			</div>
 		</Element>
 	);

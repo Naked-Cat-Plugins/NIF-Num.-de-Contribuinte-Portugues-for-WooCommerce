@@ -102,6 +102,7 @@ You can report any security bugs found in the source code of this plugin through
 
 = 7.3 - 2026-06-15 =
 * [FIX] NIF saved on the customer's profile / "My Account" billing address wasn't pre-filled on the WooCommerce Checkout Block
+* [FIX] NIF field markup on the WooCommerce Checkout Block didn't match the standard checkout step structure (heading container)
 * [DEV] Removed the unused/stale `PTWOO_NIF_VERSION` constant; checkout block assets now version off the plugin header version
 * [DEV] Tested up to WordPress 7.1-alpha-62456 and WooCommerce 10.9.0-beta.1
 
