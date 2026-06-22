@@ -20,7 +20,7 @@ This plugin adds the Portuguese VAT identification number (NIF/NIPC) as a new fi
 * It’s possible to edit the customer’s NIF/NIPC field on "My Account - Billing Address" and on the User edit screen on wp-admin.
 * NIF/NIPC check digit validation (if activated via filter, or block option)
 * WooCommerce High-Performance Order Storage compatible
-* WooCommerce Checkout Block compatible (in beta)
+* WooCommerce Checkout Block compatible
 
 = Are you already issuing automatic invoices on your WooCommerce store? =
 
