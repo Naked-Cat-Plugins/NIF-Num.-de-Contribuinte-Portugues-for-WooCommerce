@@ -31,3 +31,12 @@ createzip.command
 README.md
 src/*
 src
+
+# Tests (never shipped in releases)
+tests/*
+tests/
+playwright.config.js
+playwright-report/*
+playwright-report/
+test-results/*
+test-results/

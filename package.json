@@ -11,9 +11,12 @@
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start"
+		"start": "wp-scripts start",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.44.0",
 		"@woocommerce/dependency-extraction-webpack-plugin": "^2.3.0",
 		"@woocommerce/eslint-plugin": "^2.2.0",
 		"@wordpress/prettier-config": "^3.5.0",

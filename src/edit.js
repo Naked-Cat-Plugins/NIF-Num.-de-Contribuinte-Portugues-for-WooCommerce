@@ -66,6 +66,10 @@ export default function Edit({ attributes, setAttributes }) {
 							'Validate',
 							'nif-num-de-contribuinte-portugues-for-woocommerce'
 						)}
+						help={__(
+							'Check digit validation (when billing country is Portugal)',
+							'nif-num-de-contribuinte-portugues-for-woocommerce'
+						)}
 						checked={validate}
 						onChange={(value) => setAttributes({ validate: value })}
 					/>

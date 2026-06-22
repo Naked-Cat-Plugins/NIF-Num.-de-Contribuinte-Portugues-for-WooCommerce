@@ -14,14 +14,15 @@ import { CART_STORE_KEY, CHECKOUT_STORE_KEY } from '@woocommerce/block-data';
 /**
  * Internal dependencies
  */
-import { withFilteredAttributes } from './utils';
+import { withFilteredAttributes, validaNif, computeIsNifValid } from './utils';
 import attributes from './attributes';
 import FormStep from './frontend/form-step';
 
 const EXTENSION_NAMESPACE = 'ptwoo-nif';
 const INVALID_ERROR_ID = 'billing-nif-invalid';
+const DEBOUNCE_MS = 300;
 
-const Block = (props) => {
+const Block = ( props ) => {
 	const {
 		stepTitle,
 		stepDescription,
@@ -40,84 +41,107 @@ const Block = (props) => {
 		},
 	} = props;
 
-	const { extensions, billingCountry } = useSelect((select) => {
-		const store = select(CART_STORE_KEY);
+	const { extensions, billingCountry } = useSelect( ( select ) => {
+		const store = select( CART_STORE_KEY );
 		const { extensions, billingAddress } = store.getCartData();
 		const { country: billingCountry } = billingAddress;
 		return {
 			billingCountry,
 			extensions,
 		};
-	});
+	} );
 
 	const {
 		__internalIncrementCalculating: disablePlaceOrderButton,
 		__internalDecrementCalculating: enablePlaceOrderButton,
-	} = useDispatch(CHECKOUT_STORE_KEY);
+	} = useDispatch( CHECKOUT_STORE_KEY );
 
-	const [isFocus, setIsFocus] = useState(false);
-	const [billingNif, setBillingNif] = useState(
-		extensions[EXTENSION_NAMESPACE]?.billingNif
+	const [ isFocus, setIsFocus ] = useState( false );
+	const [ billingNif, setBillingNif ] = useState(
+		extensions[ EXTENSION_NAMESPACE ]?.billingNif
 	);
-	const [prevBillingNif, setPrevBillingNif] = useState(
-		extensions[EXTENSION_NAMESPACE]?.billingNif
+	const [ prevBillingNif, setPrevBillingNif ] = useState(
+		extensions[ EXTENSION_NAMESPACE ]?.billingNif
 	);
-	const [hasSyncedInitialValue, setHasSyncedInitialValue] = useState(false);
+	const [ hasSyncedInitialValue, setHasSyncedInitialValue ] = useState( false );
 
 	// The cart's extension data (and therefore the customer's saved NIF) is
 	// fetched asynchronously, so it's not yet available when the state above
 	// is initialized. Once it arrives, sync it into the field a single time
 	// so it doesn't overwrite anything the customer has already typed.
-	useEffect(() => {
-		const savedBillingNif = extensions[EXTENSION_NAMESPACE]?.billingNif;
-		if (!hasSyncedInitialValue && savedBillingNif) {
-			setBillingNif(savedBillingNif);
-			setPrevBillingNif(savedBillingNif);
-			setHasSyncedInitialValue(true);
+	useEffect( () => {
+		const savedBillingNif = extensions[ EXTENSION_NAMESPACE ]?.billingNif;
+		if ( ! hasSyncedInitialValue && savedBillingNif ) {
+			setBillingNif( savedBillingNif );
+			setPrevBillingNif( savedBillingNif );
+			setHasSyncedInitialValue( true );
 		}
-	}, [extensions[EXTENSION_NAMESPACE]?.billingNif, hasSyncedInitialValue]);
+	}, [ extensions[ EXTENSION_NAMESPACE ]?.billingNif, hasSyncedInitialValue ] );
 
 	const displayBillingNif =
-		showAllCountries || (!showAllCountries && 'PT' === billingCountry);
+		showAllCountries || ( ! showAllCountries && 'PT' === billingCountry );
 
-	const invalidError = getValidationError(INVALID_ERROR_ID);
-	const hasError =
-		invalidError?.hidden === false && invalidError?.message !== '';
-	const errorMessage = invalidError?.message;
-
-	useEffect(() => {
-		if (extensions[EXTENSION_NAMESPACE]?.isValid) {
-			clearValidationError(INVALID_ERROR_ID);
+	// Client-side validation — mirrors computeIsNifValid() / validaNif() in utils.js,
+	// which in turn mirror the PHP implementations in woocommerce_nif.php and
+	// ptwoo-nif-extend-store-endpoint.php.
+	// Errors are set immediately but hidden while the field is focused, so they
+	// surface only on blur or when the form is submitted.
+	useEffect( () => {
+		if (
+			computeIsNifValid(
+				billingNif,
+				isRequired,
+				validate,
+				showAllCountries,
+				billingCountry
+			)
+		) {
+			clearValidationError( INVALID_ERROR_ID );
 		} else {
-			setValidationErrors({
-				[INVALID_ERROR_ID]: {
+			setValidationErrors( {
+				[ INVALID_ERROR_ID ]: {
 					message: invalidMessage,
-					hidden: false,
+					hidden: isFocus,
 				},
-			});
+			} );
 		}
-		return () => {
-			clearValidationError(INVALID_ERROR_ID);
-		};
-	}, [extensions[EXTENSION_NAMESPACE], billingNif]);
+		return () => clearValidationError( INVALID_ERROR_ID );
+	}, [
+		billingNif,
+		isFocus,
+		validate,
+		isRequired,
+		showAllCountries,
+		billingCountry,
+		invalidMessage,
+		clearValidationError,
+		setValidationErrors,
+	] );
 
-	// Send data to the Store API.
-	useEffect(() => {
-		if (billingNif !== prevBillingNif) {
+	// Sync value to the WC session via Store API. Debounced so the button is
+	// never disabled mid-typing and only one request is sent after the user pauses.
+	useEffect( () => {
+		if ( billingNif === prevBillingNif ) {
+			return;
+		}
+
+		const timer = setTimeout( () => {
 			disablePlaceOrderButton();
-			extensionCartUpdate({
+			extensionCartUpdate( {
 				namespace: EXTENSION_NAMESPACE,
 				data: {
 					billingNif,
 					isRequired,
 					validate,
 				},
-				cartPropsToReceive: ['extensions'],
-			}).then(() => {
+				cartPropsToReceive: [ 'extensions' ],
+			} ).then( () => {
 				enablePlaceOrderButton();
-				setPrevBillingNif(billingNif);
-			});
-		}
+				setPrevBillingNif( billingNif );
+			} );
+		}, DEBOUNCE_MS );
+
+		return () => clearTimeout( timer );
 	}, [
 		extensionCartUpdate,
 		billingNif,
@@ -127,37 +151,31 @@ const Block = (props) => {
 		enablePlaceOrderButton,
 		prevBillingNif,
 		setPrevBillingNif,
-	]);
+	] );
 
-	// Callback for the input's onChange event.
+	const invalidError = getValidationError( INVALID_ERROR_ID );
+	const hasError =
+		invalidError?.hidden === false && invalidError?.message !== '';
+	const errorMessage = invalidError?.message;
+
 	const onChange = useCallback(
-		(nextValue) => {
-			clearValidationError(INVALID_ERROR_ID);
-
-			if (nextValue.length === 0 && isRequired) {
-				setValidationErrors({
-					[INVALID_ERROR_ID]: {
-						message: invalidMessage,
-						hidden: false,
-					},
-				});
-			}
-
-			setBillingNif(nextValue);
+		( nextValue ) => {
+			clearValidationError( INVALID_ERROR_ID );
+			setBillingNif( nextValue );
 		},
-		[setBillingNif, clearValidationError, setValidationErrors]
+		[ setBillingNif, clearValidationError ]
 	);
 
 	return (
-		<div className={className}>
-			{displayBillingNif && (
+		<div className={ className }>
+			{ displayBillingNif && (
 				<FormStep
-					title={stepTitle}
-					description={stepDescription}
-					showStepNumber={showStepNumber}
+					title={ stepTitle }
+					description={ stepDescription }
+					showStepNumber={ showStepNumber }
 				>
 					<div
-						className={classnames(
+						className={ classnames(
 							'wc-block-components-text-input',
 							{
 								'is-active': isFocus || billingNif,
@@ -165,46 +183,46 @@ const Block = (props) => {
 							{
 								'has-error': hasError,
 							}
-						)}
+						) }
 					>
 						<ValidatedTextInput
 							type="text"
 							id="billing_nif"
-							aria-label={label}
-							maxLength={maxLength}
+							aria-label={ label }
+							maxLength={ maxLength }
 							autoComplete="on"
-							required={isRequired}
-							onChange={onChange}
-							onFocus={() => setIsFocus(true)}
-							onBlur={() => setIsFocus(false)}
-							aria-invalid={hasError === true}
-							value={billingNif || ''}
+							required={ isRequired }
+							onChange={ onChange }
+							onFocus={ () => setIsFocus( true ) }
+							onBlur={ () => setIsFocus( false ) }
+							aria-invalid={ hasError === true }
+							value={ billingNif || '' }
 						/>
 						<label htmlFor="billing_nif">
-							{sprintf(
+							{ sprintf(
 								'%s%s',
 								label,
 								isRequired === true
 									? ''
-									: ` ${__(
+									: ` ${ __(
 											'(optional)',
 											'nif-num-de-contribuinte-portugues-for-woocommerce'
-										)}`
-							)}
+									  ) }`
+							) }
 						</label>
-						{hasError && (
+						{ hasError && (
 							<div
 								className="wc-block-components-validation-error"
 								role="alert"
 							>
-								<p>{errorMessage}</p>
+								<p>{ errorMessage }</p>
 							</div>
-						)}
+						) }
 					</div>
 				</FormStep>
-			)}
+			) }
 		</div>
 	);
 };
 
-export default withFilteredAttributes(attributes)(Block);
+export default withFilteredAttributes( attributes )( Block );

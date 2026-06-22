@@ -43,6 +43,10 @@ Thumbs.db
 # Claude
 .claude
 
+# Playwright runtime output (may contain screenshots/videos of local environment)
+playwright-report/
+test-results/
+
 # Large media files
 *.mp4
 *.tiff
