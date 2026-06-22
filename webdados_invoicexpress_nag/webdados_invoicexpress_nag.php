@@ -47,7 +47,7 @@ function webdados_invoicexpress_nag() {
 add_action( 'admin_notices', 'webdados_invoicexpress_nag' );
 
 /**
- * Dismiss InvoiceXpress for WooCommerce nag
+ * Dismiss InvoiceXpress for WooCommerce nag for 120 days
  */
 function dismiss_webdados_invoicexpress_nag() {
 	check_ajax_referer( 'dismiss_webdados_invoicexpress_nag', 'nonce' );
