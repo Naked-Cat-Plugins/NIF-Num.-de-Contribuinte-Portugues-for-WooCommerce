@@ -3,6 +3,8 @@
 __MACOSX
 
 # Tooling files
+.claude/*
+.claude/
 .git/*
 .git/
 .github/*

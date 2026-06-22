@@ -308,8 +308,7 @@ add_action(
 								)
 							) {
 								wc_add_notice(
-									/* translators: %s NIF field name */
-									sprintf( __( 'You have entered an invalid %s for Portugal.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ), '<strong>' . woocommerce_nif_field_label() . '</strong>' ),
+									woocommerce_nif_invalid_message(),
 									'error'
 								);
 							}

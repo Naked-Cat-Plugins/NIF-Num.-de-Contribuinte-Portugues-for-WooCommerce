@@ -100,6 +100,10 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
+= 7.4 - TBA =
+* [FIX] `woocommerce_nif_invalid_message` filter now applied consistently in the "My Account" billing address save path, matching classic and block checkout behaviour
+* [FIX] Several WordPress Coding Standards
+
 = 7.3 - 2026-06-15 =
 * [FIX] NIF saved on the customer's profile / "My Account" billing address wasn't pre-filled on the WooCommerce Checkout Block
 * [FIX] NIF field markup on the WooCommerce Checkout Block didn't match the standard checkout step structure (heading container)
