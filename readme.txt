@@ -105,7 +105,7 @@ You can report any security bugs found in the source code of this plugin through
 
 = 8.1 - 2026-08-02 =
 * [FIX] Blocks checkout: NIF is now also validated server-side when the order is processed, not just client-side, so a missing or invalid NIF can no longer be submitted with JavaScript disabled or by calling the Store API directly
-* [DEV] Bundled ifthenpay suggestion module updated: documented the intentional Portugal-only display exception, guarded an array_unshift() call against a possible future WooCommerce REST response change
+* [DEV] Bundled ifthenpay suggestion module updated
 
 = 8.0 - 2026-06-22 =
 * [NEW] Complete rewrite the blocks checkout field for performance
