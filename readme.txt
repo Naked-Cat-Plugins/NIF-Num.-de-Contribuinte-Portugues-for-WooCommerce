@@ -101,7 +101,7 @@ You can report any security bugs found in the source code of this plugin through
 == Changelog ==
 
 = TBA =
-* [DEV] The bundled ifthenpay suggestion module's opt-out check now uses the constant the module itself defines (`NAKEDCAT_RECOMMEND_IFTHENPAY`), it previously checked one that was never defined
+* [DEV] Bundled ifthenpay suggestion module updated
 
 = 8.1 - 2026-08-02 =
 * [FIX] Blocks checkout: NIF is now also validated server-side when the order is processed, not just client-side, so a missing or invalid NIF can no longer be submitted with JavaScript disabled or by calling the Store API directly
