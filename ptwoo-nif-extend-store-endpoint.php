@@ -131,7 +131,7 @@ class PTWoo_NIF_Extend_Store_Endpoint {
 		if ( ! $this->is_nif_valid() ) {
 			throw new RouteException(
 				'nif_num_de_contribuinte_portugues_for_woocommerce_invalid_nif',
-				esc_html( woocommerce_nif_invalid_message() ),
+				wp_kses_post( woocommerce_nif_invalid_message() ),
 				400
 			);
 		}
