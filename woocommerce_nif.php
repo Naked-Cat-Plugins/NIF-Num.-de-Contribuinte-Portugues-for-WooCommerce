@@ -508,4 +508,9 @@ if ( ! defined( 'NAKEDCAT_RECOMMEND_IFTHENPAY' ) ) {
 	require_once 'recommend-ifthenpay/recommend-ifthenpay.php';
 }
 
+/* VAT Number and EU VIES Validation nag */
+if ( ! defined( 'NAKEDCAT_VAT_NUMBER_NAG' ) ) {
+	require_once 'nakedcat-vat-number-nag/nakedcat-vat-number-nag.php';
+}
+
 /* If you're reading this you must know what you're doing ;-) Greetings from sunny Portugal! */
