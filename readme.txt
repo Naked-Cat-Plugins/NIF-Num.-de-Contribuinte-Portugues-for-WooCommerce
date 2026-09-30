@@ -4,7 +4,7 @@ Tags: ecommerce, nif, nipc, vat, tax
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 8.3.1
+Stable tag: 8.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -109,7 +109,7 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
-= 8.3.1 - 2026-09-30 =
+= 8.4 - 2026-09-30 =
 * [TWEAK] The launch offer for VAT Number and EU VIES Validation for WooCommerce, shown in the notice presenting it, is extended until November 30
 * [DEV] Tested up to WordPress 7.2-alpha-64009 and WooCommerce 11.2.0-beta.2
 
