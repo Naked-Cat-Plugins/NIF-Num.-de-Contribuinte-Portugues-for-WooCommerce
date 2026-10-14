@@ -210,9 +210,9 @@ class Nag {
 						sprintf(
 							$this->launch_offer_running()
 								/* translators: %1$s: coupon code, %2$s: link opening tag, %3$s: link closing tag, %4$d: how many customers the coupon is limited to */
-								? __( 'Add the coupon %1$s to a yearly licence of %2$sVAT Number and EU VIES Validation for WooCommerce%3$s and get an extra 50%% off the first year <strong>and</strong> 50%% off every renewal, forever. Limited to the first %4$d customers.', 'nif-num-de-contribuinte-portugues-for-woocommerce' )
+								? __( 'Add the coupon %1$s to a yearly license of %2$sVAT Number and EU VIES Validation for WooCommerce%3$s and get an extra 50%% off the first year <strong>and</strong> 50%% off every renewal, forever. Limited to the first %4$d customers.', 'nif-num-de-contribuinte-portugues-for-woocommerce' )
 								/* translators: %1$s: coupon code, %2$s: link opening tag, %3$s: link closing tag, %4$d: how many customers the coupon is limited to */
-								: __( 'Add the coupon %1$s to a yearly licence of %2$sVAT Number and EU VIES Validation for WooCommerce%3$s and get 50%% off the first year <strong>and</strong> 50%% off every renewal, forever. Limited to the first %4$d customers.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ),
+								: __( 'Add the coupon %1$s to a yearly license of %2$sVAT Number and EU VIES Validation for WooCommerce%3$s and get 50%% off the first year <strong>and</strong> 50%% off every renewal, forever. Limited to the first %4$d customers.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ),
 							'<code>' . esc_html( self::COUPON ) . '</code>',
 							$link_open,
 							$link_close,
@@ -243,7 +243,7 @@ class Nag {
 					echo wp_kses(
 						sprintf(
 							/* translators: %1$s: link opening tag, %2$s: link closing tag, %3$s: coupon code */
-							__( '%1$sLaunch offer%2$s, for everybody: 50%% off the first year, or 25%% off a lifetime licence. <strong>Special offer for you:</strong> 50%% on top + 50%% forever on all renewals. Use the %3$s coupon.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ),
+							__( '%1$sLaunch offer%2$s, for everybody: 50%% off the first year, or 25%% off a lifetime license. <strong>Special offer for you:</strong> 50%% on top + 50%% forever on all renewals. Use the %3$s coupon.', 'nif-num-de-contribuinte-portugues-for-woocommerce' ),
 							'<strong>' . $link_open,
 							$link_close . '</strong>',
 							'<code>' . esc_html( self::COUPON ) . '</code>'

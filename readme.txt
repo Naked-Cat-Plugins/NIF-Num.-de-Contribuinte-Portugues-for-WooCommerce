@@ -28,7 +28,7 @@ Get to know [VAT Number and EU VIES Validation for WooCommerce](https://wbds.pt/
 
 It is a replacement for this plugin rather than an add-on to it, and its Zero-Touch Migration reads the numbers this plugin has already stored, so there is nothing to export, import or schedule: the numbers convert themselves as customers come back.
 
-[Launch offer](https://wbds.pt/buv): 50% off the first year, or 25% off a lifetime licence.
+[Launch offer](https://wbds.pt/buv): 50% off the first year, or 25% off a lifetime license.
 
 = Are you already issuing automatic invoices on your WooCommerce store? =
 
