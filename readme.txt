@@ -109,6 +109,11 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
+= TBA =
+* [FIX] Blocks checkout: on a slow shop, the NIF field could go back to the first digits typed while the customer was still typing, and the order was then saved with an incomplete NIF
+* [FIX] Blocks checkout: the order now always gets the NIF shown in the field when "Place Order" is clicked, even when it is clicked right after typing
+* [FIX] Blocks checkout: "Place Order" no longer stays disabled when saving the NIF fails
+
 = 8.4 - 2026-09-30 =
 * [TWEAK] The launch offer for VAT Number and EU VIES Validation for WooCommerce, shown in the notice presenting it, is extended until November 30
 * [DEV] Tested up to WordPress 7.2-alpha-64009 and WooCommerce 11.2.0-beta.2

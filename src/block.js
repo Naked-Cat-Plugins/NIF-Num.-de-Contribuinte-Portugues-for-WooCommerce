@@ -3,7 +3,7 @@
  */
 import classnames from 'classnames';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState, useCallback } from '@wordpress/element';
+import { useEffect, useState, useCallback, useRef } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import {
 	extensionCartUpdate,
@@ -54,29 +54,52 @@ const Block = ( props ) => {
 	const {
 		__internalIncrementCalculating: disablePlaceOrderButton,
 		__internalDecrementCalculating: enablePlaceOrderButton,
+		setExtensionData,
+		__internalSetExtensionData,
 	} = useDispatch( CHECKOUT_STORE_KEY );
+	// Public since WooCommerce 9.9, internal before that.
+	const setCheckoutExtensionData = setExtensionData || __internalSetExtensionData;
+
+	// The NIF in the cart's extension data: the one in the session, or the one saved on the
+	// customer's account.
+	const cartBillingNif = extensions[ EXTENSION_NAMESPACE ]?.billingNif || '';
 
 	const [ isFocus, setIsFocus ] = useState( false );
-	const [ billingNif, setBillingNif ] = useState(
-		extensions[ EXTENSION_NAMESPACE ]?.billingNif
-	);
-	const [ prevBillingNif, setPrevBillingNif ] = useState(
-		extensions[ EXTENSION_NAMESPACE ]?.billingNif
-	);
-	const [ hasSyncedInitialValue, setHasSyncedInitialValue ] = useState( false );
+	// The field is the only source of the NIF once it is on screen. The cart's value fills it in
+	// once, and is never written back into it afterwards: every answer to a cart update carries
+	// whatever the session held when that request reached the server, which is often a NIF the
+	// shopper has typed over since.
+	const [ billingNif, setBillingNif ] = useState( cartBillingNif );
+	const hasPrefilled = useRef( '' !== cartBillingNif );
+	const hasEdited = useRef( false );
 
-	// The cart's extension data (and therefore the customer's saved NIF) is
-	// fetched asynchronously, so it's not yet available when the state above
-	// is initialized. Once it arrives, sync it into the field a single time
-	// so it doesn't overwrite anything the customer has already typed.
+	// The NIF the session is known to hold, and whether a cart update is waiting for an answer.
+	const sessionNif = useRef( cartBillingNif );
+	const isSyncing = useRef( false );
+	const [ syncRound, setSyncRound ] = useState( 0 );
+
+	// The cart's extension data (and therefore the customer's saved NIF) may arrive after the
+	// field is on screen. Fill it in when it does, unless the shopper has already typed.
 	useEffect( () => {
-		const savedBillingNif = extensions[ EXTENSION_NAMESPACE ]?.billingNif;
-		if ( ! hasSyncedInitialValue && savedBillingNif ) {
-			setBillingNif( savedBillingNif );
-			setPrevBillingNif( savedBillingNif );
-			setHasSyncedInitialValue( true );
+		if ( hasPrefilled.current || hasEdited.current || '' === cartBillingNif ) {
+			return;
 		}
-	}, [ extensions[ EXTENSION_NAMESPACE ]?.billingNif, hasSyncedInitialValue ] );
+		hasPrefilled.current = true;
+		sessionNif.current = cartBillingNif;
+		setBillingNif( cartBillingNif );
+	}, [ cartBillingNif ] );
+
+	// The NIF also goes with the Place Order request itself, so the order gets the one in the
+	// field when it was clicked, even if the cart update below has not been sent or answered yet.
+	useEffect( () => {
+		if ( setCheckoutExtensionData ) {
+			setCheckoutExtensionData( EXTENSION_NAMESPACE, {
+				billingNif,
+				isRequired,
+				validate,
+			} );
+		}
+	}, [ setCheckoutExtensionData, billingNif, isRequired, validate ] );
 
 	const displayBillingNif =
 		showAllCountries || ( ! showAllCountries && 'PT' === billingCountry );
@@ -118,14 +141,17 @@ const Block = ( props ) => {
 		setValidationErrors,
 	] );
 
-	// Sync value to the WC session via Store API. Debounced so the button is
-	// never disabled mid-typing and only one request is sent after the user pauses.
+	// Keep the session up to date (it fills the field in again if the page is reloaded), through
+	// a cart update sent once the shopper pauses. One at a time: a second request sent before the
+	// first is answered can reach the server first and be overwritten by the older NIF. When one
+	// is answered, syncRound sends the NIF typed in the meantime, if any.
 	useEffect( () => {
-		if ( billingNif === prevBillingNif ) {
+		if ( billingNif === sessionNif.current || isSyncing.current ) {
 			return;
 		}
 
 		const timer = setTimeout( () => {
+			isSyncing.current = true;
 			disablePlaceOrderButton();
 			extensionCartUpdate( {
 				namespace: EXTENSION_NAMESPACE,
@@ -135,22 +161,27 @@ const Block = ( props ) => {
 					validate,
 				},
 				cartPropsToReceive: [ 'extensions' ],
-			} ).then( () => {
-				enablePlaceOrderButton();
-				setPrevBillingNif( billingNif );
-			} );
+			} )
+				// On failure too: the order still gets the NIF from the Place Order request, and
+				// retrying here would repeat a failing request every few hundred milliseconds.
+				// The next change to the field sends a new one.
+				.catch( () => {} )
+				.then( () => {
+					sessionNif.current = billingNif;
+					isSyncing.current = false;
+					enablePlaceOrderButton();
+					setSyncRound( ( round ) => round + 1 );
+				} );
 		}, DEBOUNCE_MS );
 
 		return () => clearTimeout( timer );
 	}, [
-		extensionCartUpdate,
 		billingNif,
+		syncRound,
 		isRequired,
 		validate,
 		disablePlaceOrderButton,
 		enablePlaceOrderButton,
-		prevBillingNif,
-		setPrevBillingNif,
 	] );
 
 	const invalidError = getValidationError( INVALID_ERROR_ID );
@@ -160,6 +191,7 @@ const Block = ( props ) => {
 
 	const onChange = useCallback(
 		( nextValue ) => {
+			hasEdited.current = true;
 			clearValidationError( INVALID_ERROR_ID );
 			setBillingNif( nextValue );
 		},

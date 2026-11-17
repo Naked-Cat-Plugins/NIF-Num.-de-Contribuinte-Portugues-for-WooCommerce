@@ -55,3 +55,7 @@ test-results/
 *.mov
 *.wmv
 
+
+# e2e run state (tests/e2e/support/global-setup.js)
+tests/e2e/support/.e2e-state.json
+.phpunit.cache/
