@@ -1,10 +1,10 @@
 === NIF (Num. de Contribuinte Português) for WooCommerce ===
 Contributors: nakedcatplugins, webdados
 Tags: ecommerce, nif, nipc, vat, tax
-Requires at least: 5.8
+Requires at least: 6.7
 Tested up to: 7.1
-Requires PHP: 7.2
-Stable tag: 8.4
+Requires PHP: 7.4
+Stable tag: 8.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -109,13 +109,14 @@ You can report any security bugs found in the source code of this plugin through
 
 == Changelog ==
 
-= TBA =
+= 8.5 - 2026-11-17 =
 * [FIX] Blocks checkout: on a slow shop, the NIF field could go back to the first digits typed while the customer was still typing, and the order was then saved with an incomplete NIF
 * [FIX] Blocks checkout: the order now always gets the NIF shown in the field when "Place Order" is clicked, even when it is clicked right after typing
 * [FIX] Blocks checkout: "Place Order" no longer stays disabled when saving the NIF fails
+* [DEV] Requires WordPress 6.7, WooCommerce 9.9, and PHP 7.4
+* [DEV] Tested up to WordPress 7.2-RC1-65559 and WooCommerce 11.3.0
 
 = 8.4 - 2026-09-30 =
-* [TWEAK] The launch offer for VAT Number and EU VIES Validation for WooCommerce, shown in the notice presenting it, is extended until November 30
 * [DEV] Tested up to WordPress 7.2-alpha-64009 and WooCommerce 11.2.0-beta.2
 
 = 8.3 - 2026-08-26 =
