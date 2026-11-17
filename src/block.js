@@ -55,10 +55,7 @@ const Block = ( props ) => {
 		__internalIncrementCalculating: disablePlaceOrderButton,
 		__internalDecrementCalculating: enablePlaceOrderButton,
 		setExtensionData,
-		__internalSetExtensionData,
 	} = useDispatch( CHECKOUT_STORE_KEY );
-	// Public since WooCommerce 9.9, internal before that.
-	const setCheckoutExtensionData = setExtensionData || __internalSetExtensionData;
 
 	// The NIF in the cart's extension data: the one in the session, or the one saved on the
 	// customer's account.
@@ -92,14 +89,12 @@ const Block = ( props ) => {
 	// The NIF also goes with the Place Order request itself, so the order gets the one in the
 	// field when it was clicked, even if the cart update below has not been sent or answered yet.
 	useEffect( () => {
-		if ( setCheckoutExtensionData ) {
-			setCheckoutExtensionData( EXTENSION_NAMESPACE, {
-				billingNif,
-				isRequired,
-				validate,
-			} );
-		}
-	}, [ setCheckoutExtensionData, billingNif, isRequired, validate ] );
+		setExtensionData( EXTENSION_NAMESPACE, {
+			billingNif,
+			isRequired,
+			validate,
+		} );
+	}, [ setExtensionData, billingNif, isRequired, validate ] );
 
 	const displayBillingNif =
 		showAllCountries || ( ! showAllCountries && 'PT' === billingCountry );
